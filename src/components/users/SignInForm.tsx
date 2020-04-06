@@ -104,8 +104,13 @@ export default ({ navigation, route }: Props) => {
     }
   };
 
+  const handleDismiss = () => {
+    Keyboard.dismiss();
+    dismissSnackbar();
+  }
+
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <TouchableWithoutFeedback onPress={handleDismiss}>
       <View style={[styles.centerOnly, customStyles.container]}>
         <Snackbar
           visible={signInData.snackbarVisible}

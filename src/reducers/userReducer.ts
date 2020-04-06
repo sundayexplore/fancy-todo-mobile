@@ -1,7 +1,7 @@
 import { Action } from ".";
 
 const initialState = {
-  isLoggedIn: false,
+  isSignedIn: false,
   currentUser: null,
   token: null
 };
@@ -11,7 +11,7 @@ export default (state = initialState, action: Action) => {
     case "SIGN_IN":
       return {
         ...state,
-        isLoggedIn: true,
+        isSignedIn: true,
         currentUser: action.payload.user,
         token: action.payload.token
       };
@@ -19,7 +19,7 @@ export default (state = initialState, action: Action) => {
     case "SIGN_OUT":
       return {
         ...state,
-        isLoggedIn: false,
+        isSignedIn: false,
         currentUser: null,
         token: null
       };

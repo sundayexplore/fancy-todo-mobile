@@ -1,33 +1,55 @@
 import React from "react";
 import { StyleSheet } from "react-native";
 import { Provider as PaperProvider } from "react-native-paper";
-import { Provider as ReduxProvider } from "react-redux";
+import { Provider as ReduxProvider, useSelector } from "react-redux";
 import { NavigationContainer } from "@react-navigation/native";
-import { createStackNavigator } from '@react-navigation/stack';
+import { createStackNavigator } from "@react-navigation/stack";
 
-import { SignInScreen, SignUpScreen } from './src/screens';
+import { State } from "./src/reducers";
+import { SignInScreen, SignUpScreen, TodoListScreen } from "./src/screens";
 
 import store from "./src/stores";
 
 const Stack = createStackNavigator();
 
 export default function App() {
+  const isSignedIn = useSelector(
+    (state: State) => state.userReducer.isSignedIn
+  );
   return (
     <ReduxProvider store={store}>
       <PaperProvider>
         <NavigationContainer>
-          <Stack.Navigator initialRouteName="SignIn">
-            <Stack.Screen 
-              name="SignIn"
-              component={SignInScreen}
-              options={{headerTitle: "Sign In"}}
-            />
-            <Stack.Screen
-              name="SignUp"
-              component={SignUpScreen}
-              options={{headerTitle: "Sign Up"}}
-            />
-          </Stack.Navigator> 
+          <Stack.Navigator>
+            {isSignedIn === false ? (
+              <>
+                <Stack.Screen
+                  name="SignIn"
+                  component={SignInScreen}
+                  options={{
+                    title: "Sign In",
+                    animationTypeForReplace: "pop"
+                  }}
+                />
+                <Stack.Screen
+                  name="SignUp"
+                  component={SignUpScreen}
+                  options={{
+                    title: "Sign Up",
+                    animationTypeForReplace: "pop"
+                  }}
+                />
+              </>
+            ) : (
+              <>
+                <Stack.Screen
+                  name="TodoList"
+                  component={TodoListScreen}
+                  options={{ headerTitle: "Todo List" }}
+                />
+              </>
+            )}
+          </Stack.Navigator>
         </NavigationContainer>
       </PaperProvider>
     </ReduxProvider>

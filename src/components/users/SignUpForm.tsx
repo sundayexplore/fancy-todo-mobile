@@ -7,13 +7,20 @@ import {
   StyleSheet
 } from "react-native";
 import { useDispatch } from "react-redux";
-import { TextInput, Button, Card, Snackbar, Subheading } from "react-native-paper";
+import {
+  TextInput,
+  Button,
+  Card,
+  Snackbar,
+  Subheading
+} from "react-native-paper";
 import { responsiveWidth } from "react-native-responsive-dimensions";
 
-import { Props } from '../';
+import { Props } from "../";
 import styles from "../../styles";
+import { userAPI, signInCompleted } from "../../actions/userActions";
 
-export default ({navigation, route}: Props) => {
+export default ({ navigation, route }: Props) => {
   const dispatch = useDispatch();
   const [signUpData, setSignUpData] = useState({
     userData: {
@@ -88,8 +95,41 @@ export default ({navigation, route}: Props) => {
     }
   };
 
+  const asyncError = (message: string) => {
+    setSignUpData({
+      ...signUpData,
+      currentError: message,
+      snackbarVisible: true
+    });
+  };
+
+  const handleSubmit = async () => {
+    checkError();
+    if (Object.values(signUpData.errors).every(currentValue => currentValue === false)) {
+      try {
+        await setSignUpData({...signUpData, isLoading: true});
+        const signUpResponse = await userAPI.post('/signup', {
+          ...signUpData.userData
+        });
+        const signInResponse = await userAPI.post('/signin', {
+          userIdentifier: signUpData.userData.username,
+          password: signUpData.userData.password
+        });
+        AsyncStorage.setItem('token', signInResponse.data.token);
+        dispatch(signInCompleted(signInResponse.data));
+      } catch (err) {
+        asyncError(err.response.data.message);
+      }
+    }
+  };
+
+  const handleDismiss = () => {
+    Keyboard.dismiss();
+    dismissSnackbar();
+  };
+
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+    <TouchableWithoutFeedback onPress={handleDismiss}>
       <View style={[styles.centerOnly, customStyles.container]}>
         <Snackbar
           visible={signUpData.snackbarVisible}
@@ -139,7 +179,7 @@ export default ({navigation, route}: Props) => {
         <Button
           style={customStyles.button}
           mode="contained"
-          // onPress={handleSubmit}
+          onPress={handleSubmit}
         >
           Sign Up
         </Button>
