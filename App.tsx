@@ -5,7 +5,7 @@ import { Provider as ReduxProvider } from "react-redux";
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from '@react-navigation/stack';
 
-import { SignInScreen } from './src/screens';
+import { SignInScreen, SignUpScreen } from './src/screens';
 
 import store from "./src/stores";
 
@@ -20,7 +20,12 @@ export default function App() {
             <Stack.Screen 
               name="SignIn"
               component={SignInScreen}
-              options={{headerTitle: "Welcome to Fancy Todo!"}}
+              options={{headerTitle: "Sign In"}}
+            />
+            <Stack.Screen
+              name="SignUp"
+              component={SignUpScreen}
+              options={{headerTitle: "Sign Up"}}
             />
           </Stack.Navigator> 
         </NavigationContainer>

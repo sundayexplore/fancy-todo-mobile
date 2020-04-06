@@ -4,61 +4,78 @@ import {
   StyleSheet,
   AsyncStorage,
   Keyboard,
-  TouchableWithoutFeedback,
+  TouchableWithoutFeedback
 } from "react-native";
-import { TextInput, Button, Card, Snackbar } from "react-native-paper";
+import {
+  TextInput,
+  Button,
+  Card,
+  Snackbar,
+  Subheading
+} from "react-native-paper";
 import { useDispatch } from "react-redux";
 import {
   responsiveHeight,
-  responsiveWidth,
+  responsiveWidth
 } from "react-native-responsive-dimensions";
 
 import { userAPI, signInCompleted } from "../../actions/userActions";
+import { Props } from "../";
 import styles from "../../styles";
 
-export default (props: any) => {
+export default ({ navigation, route }: Props) => {
   const dispatch = useDispatch();
   const [signInData, setSignInData] = useState({
-    userIdentifier: "",
-    password: "",
+    userData: {
+      userIdentifier: "",
+      password: ""
+    },
     isLoading: false,
-    error: [false, false],
+    errors: {
+      userIdentifier: false,
+      password: false
+    },
     currentError: "",
-    snackbarVisible: false,
+    snackbarVisible: false
   });
+
+  const reverseAllErrors = (target: boolean) => {
+    const errors: any = { ...signInData.errors };
+    for (const key in errors) {
+      errors[key] = target;
+    }
+    return errors;
+  };
+
+  const handleChange = (value: string, target: string) => {
+    const changeTarget: any = {...signInData};
+    changeTarget.userData[target] = value;
+    setSignInData(changeTarget);
+  }
 
   const dismissSnackbar = () => {
     setSignInData({
       ...signInData,
       snackbarVisible: false,
       currentError: "",
-      error: [false, false],
+      errors: reverseAllErrors(false)
     });
   };
 
   const checkError = () => {
-    const { userIdentifier, password } = signInData;
+    const { userIdentifier, password } = signInData.userData;
     if (userIdentifier.length <= 0) {
-      setSignInData({
-        ...signInData,
-        error: [true, false],
-        currentError: "Email or username cannot be empty!",
-        snackbarVisible: true,
-      });
+      const checkTarget = {...signInData};
+      checkTarget.errors.userIdentifier = true;
+      checkTarget.currentError = "Email or usernmae can't be empty!";
+      checkTarget.snackbarVisible = true;
+      setSignInData(checkTarget);
     } else if (password.length <= 0) {
-      setSignInData({
-        ...signInData,
-        error: [false, true],
-        currentError: "Password cannot be empty!",
-        snackbarVisible: true,
-      });
-    } else if (userIdentifier.length <= 0 && password.length <= 0) {
-      setSignInData({
-        ...signInData,
-        error: [true, true],
-        currentError: "Please fill all fields!",
-        snackbarVisible: true,
-      });
+      const checkTarget = {...signInData};
+      checkTarget.errors.password = true;
+      checkTarget.currentError = "Password can't be empty!";
+      checkTarget.snackbarVisible = true;
+      setSignInData(checkTarget);
     }
   };
 
@@ -66,35 +83,23 @@ export default (props: any) => {
     setSignInData({
       ...signInData,
       currentError: message,
-      snackbarVisible: true,
+      snackbarVisible: true
     });
-  };
-
-  const handleUserIdentifier = (text: string) => {
-    setSignInData({ ...signInData, userIdentifier: text });
-  };
-
-  const handlePassword = (text: string) => {
-    setSignInData({ ...signInData, password: text });
   };
 
   const handleSubmit = async () => {
     checkError();
-    if (signInData.error.every((currentValue) => currentValue === false)) {
-      console.log("lolos");
-
+    if (Object.values(signInData.errors).every((currentValue) => currentValue === false)) {
       try {
-        const { userIdentifier, password } = signInData;
+        const { userIdentifier, password } = signInData.userData;
         const { data } = await userAPI.post("/signin", {
           userIdentifier,
-          password,
+          password
         });
-        console.log(data);
-        // await AsyncStorage.setItem('token', data.token);
-        // await dispatch(signInCompleted(data));
+        await AsyncStorage.setItem('token', data.token);
+        await dispatch(signInCompleted(data));
       } catch (err) {
-        console.log(err.response.data.message);
-        // asyncError(err.response.message);
+        asyncError(err.response.data.message);
       }
     }
   };
@@ -110,22 +115,20 @@ export default (props: any) => {
           {signInData.currentError}
         </Snackbar>
         <TextInput
-          error={signInData.error[0]}
+          error={signInData.errors.userIdentifier}
           style={customStyles.textField}
           label="Email or Username"
-          value={signInData.userIdentifier}
-          onChangeText={(text) => handleUserIdentifier(text)}
+          value={signInData.userData.userIdentifier}
+          onChangeText={(text) => handleChange(text, 'userIdentifier')}
           mode="outlined"
-          autoFocus={true}
         />
         <TextInput
-          error={signInData.error[1]}
+          error={signInData.errors.password}
           style={customStyles.textField}
           label="Password"
-          value={signInData.password}
-          onChangeText={(text) => handlePassword(text)}
+          value={signInData.userData.password}
+          onChangeText={(text) => handleChange(text, 'password')}
           mode="outlined"
-          autoFocus={true}
         />
         <Button
           style={customStyles.button}
@@ -134,6 +137,15 @@ export default (props: any) => {
         >
           Sign In
         </Button>
+        <View>
+          <Subheading
+            onPress={() => {
+              navigation.navigate("SignUp");
+            }}
+          >
+            Don't have an account? Sign Up
+          </Subheading>
+        </View>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -142,15 +154,15 @@ export default (props: any) => {
 const customStyles = StyleSheet.create({
   textField: {
     width: responsiveWidth(75),
-    margin: 15,
+    margin: 15
   },
   button: {
-    margin: 20,
+    margin: 20
   },
   snackbarError: {
-    backgroundColor: "red",
+    backgroundColor: "red"
   },
   container: {
-    backgroundColor: "#fff",
-  },
+    backgroundColor: "#fff"
+  }
 });
