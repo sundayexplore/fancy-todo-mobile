@@ -38,6 +38,32 @@ export default ({ navigation, route }: Props) => {
     currentError: "",
     snackbarVisible: false
   });
+  let userIdentifierRef: any = null;
+  let passwordRef: any = null;
+
+  const handleTextInputRefs = (field: string, targetRef: any) => {
+    switch (field) {
+      case 'userIdentifier':
+        userIdentifierRef = targetRef
+        break;
+
+      case 'password':
+        passwordRef = targetRef;
+        break;
+    }
+  };
+
+  const handleTextInputFocus = (field: string) => {
+    switch (field) {
+      case 'userIdentifier':
+        userIdentifierRef.focus();
+        break;
+
+      case 'password':
+        passwordRef.focus();
+        break;
+    }
+  }
 
   const reverseAllErrors = (target: boolean) => {
     const errors: any = { ...signInData.errors };
@@ -48,10 +74,10 @@ export default ({ navigation, route }: Props) => {
   };
 
   const handleChange = (value: string, target: string) => {
-    const changeTarget: any = {...signInData};
+    const changeTarget: any = { ...signInData };
     changeTarget.userData[target] = value;
     setSignInData(changeTarget);
-  }
+  };
 
   const dismissSnackbar = () => {
     setSignInData({
@@ -65,13 +91,13 @@ export default ({ navigation, route }: Props) => {
   const checkError = () => {
     const { userIdentifier, password } = signInData.userData;
     if (userIdentifier.length <= 0) {
-      const checkTarget = {...signInData};
+      const checkTarget = { ...signInData };
       checkTarget.errors.userIdentifier = true;
       checkTarget.currentError = "Email or usernmae can't be empty!";
       checkTarget.snackbarVisible = true;
       setSignInData(checkTarget);
     } else if (password.length <= 0) {
-      const checkTarget = {...signInData};
+      const checkTarget = { ...signInData };
       checkTarget.errors.password = true;
       checkTarget.currentError = "Password can't be empty!";
       checkTarget.snackbarVisible = true;
@@ -89,14 +115,18 @@ export default ({ navigation, route }: Props) => {
 
   const handleSubmit = async () => {
     checkError();
-    if (Object.values(signInData.errors).every((currentValue) => currentValue === false)) {
+    if (
+      Object.values(signInData.errors).every(
+        (currentValue) => currentValue === false
+      )
+    ) {
       try {
         const { userIdentifier, password } = signInData.userData;
         const { data } = await userAPI.post("/signin", {
           userIdentifier,
           password
         });
-        await AsyncStorage.setItem('token', data.token);
+        await AsyncStorage.setItem("token", data.token);
         await dispatch(signInCompleted(data));
       } catch (err) {
         asyncError(err.response.data.message);
@@ -107,7 +137,7 @@ export default ({ navigation, route }: Props) => {
   const handleDismiss = () => {
     Keyboard.dismiss();
     dismissSnackbar();
-  }
+  };
 
   return (
     <TouchableWithoutFeedback onPress={handleDismiss}>
@@ -124,16 +154,25 @@ export default ({ navigation, route }: Props) => {
           style={customStyles.textField}
           label="Email or Username"
           value={signInData.userData.userIdentifier}
-          onChangeText={(text) => handleChange(text, 'userIdentifier')}
+          onChangeText={(text) => handleChange(text, "userIdentifier")}
           mode="outlined"
+          autoCapitalize="none"
+          autoCompleteType="email"
+          autoFocus={true}
+          returnKeyType="next"
+          ref={ref => handleTextInputRefs('userIdentifier', ref)}
+          onSubmitEditing={() => handleTextInputFocus('password')}
         />
         <TextInput
+          ref={ref => handleTextInputRefs('password', ref)}
           error={signInData.errors.password}
           style={customStyles.textField}
           label="Password"
           value={signInData.userData.password}
-          onChangeText={(text) => handleChange(text, 'password')}
+          onChangeText={(text) => handleChange(text, "password")}
           mode="outlined"
+          secureTextEntry={true}
+          autoCapitalize="none"
         />
         <Button
           style={customStyles.button}

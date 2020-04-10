@@ -40,6 +40,59 @@ export default ({ navigation, route }: Props) => {
     currentError: "",
     snackbarVisible: false
   });
+  let firstNameRef: any = null;
+  let lastNameRef: any = null;
+  let usernameRef: any = null;
+  let emailRef: any = null;
+  let passwordRef: any = null;
+
+  const handleTextInputRefs = (field: string, targetRef: any) => {
+    switch (field) {
+      case "firstName":
+        firstNameRef = targetRef;
+        break;
+
+      case "lastName":
+        lastNameRef = targetRef;
+        break;
+
+      case "username":
+        usernameRef = targetRef;
+        break;
+
+      case "email":
+        emailRef = targetRef;
+        break;
+
+      case "password":
+        passwordRef = targetRef;
+        break;
+    }
+  };
+
+  const handleTextInputFocus = (field: string) => {
+    switch (field) {
+      case "firstName":
+        firstNameRef.focus();
+        break;
+
+      case "lastName":
+        lastNameRef.focus();
+        break;
+
+      case "username":
+        usernameRef.focus();
+        break;
+
+      case "email":
+        emailRef.focus();
+        break;
+
+      case "password":
+        passwordRef.focus();
+        break;
+    }
+  };
 
   const reverseAllErrors = (target: boolean) => {
     const errors: any = { ...signUpData.errors };
@@ -105,17 +158,22 @@ export default ({ navigation, route }: Props) => {
 
   const handleSubmit = async () => {
     checkError();
-    if (Object.values(signUpData.errors).every(currentValue => currentValue === false)) {
+    if (
+      Object.values(signUpData.errors).every(
+        (currentValue) => currentValue === false
+      )
+    ) {
       try {
-        await setSignUpData({...signUpData, isLoading: true});
-        const signUpResponse = await userAPI.post('/signup', {
+        await setSignUpData({ ...signUpData, isLoading: true });
+        const signUpResponse = await userAPI.post("/signup", {
           ...signUpData.userData
         });
-        const signInResponse = await userAPI.post('/signin', {
+        const signInResponse = await userAPI.post("/signin", {
           userIdentifier: signUpData.userData.username,
           password: signUpData.userData.password
         });
-        AsyncStorage.setItem('token', signInResponse.data.token);
+        console.log(signInResponse.data);
+        AsyncStorage.setItem("token", signInResponse.data.token);
         dispatch(signInCompleted(signInResponse.data));
       } catch (err) {
         asyncError(err.response.data.message);
@@ -144,6 +202,11 @@ export default ({ navigation, route }: Props) => {
           style={customStyles.textField}
           value={signUpData.userData.firstName}
           mode="outlined"
+          autoCompleteType="name"
+          autoFocus={true}
+          returnKeyType="next"
+          ref={ref => handleTextInputRefs('firstName', ref)}
+          onSubmitEditing={() => handleTextInputFocus('lastName')}
         />
         <TextInput
           label="Last Name"
@@ -151,6 +214,10 @@ export default ({ navigation, route }: Props) => {
           style={customStyles.textField}
           value={signUpData.userData.lastName}
           mode="outlined"
+          autoCompleteType="name"
+          returnKeyType="next"
+          ref={ref => handleTextInputRefs('lastName', ref)}
+          onSubmitEditing={() => handleTextInputFocus('username')}
         />
         <TextInput
           label="Username"
@@ -159,6 +226,11 @@ export default ({ navigation, route }: Props) => {
           style={customStyles.textField}
           value={signUpData.userData.username}
           mode="outlined"
+          autoCapitalize="none"
+          autoCompleteType="username"
+          returnKeyType="next"
+          ref={ref => handleTextInputRefs('username', ref)}
+          onSubmitEditing={() => handleTextInputFocus('email')}
         />
         <TextInput
           label="Email"
@@ -167,6 +239,11 @@ export default ({ navigation, route }: Props) => {
           style={customStyles.textField}
           value={signUpData.userData.email}
           mode="outlined"
+          autoCapitalize="none"
+          autoCompleteType="email"
+          returnKeyType="next"
+          ref={ref => handleTextInputRefs('email', ref)}
+          onSubmitEditing={() => handleTextInputFocus('password')}
         />
         <TextInput
           label="Password"
@@ -175,6 +252,9 @@ export default ({ navigation, route }: Props) => {
           style={customStyles.textField}
           value={signUpData.userData.password}
           mode="outlined"
+          secureTextEntry={true}
+          autoCapitalize="none"
+          ref={ref => handleTextInputRefs('password', ref)}
         />
         <Button
           style={customStyles.button}

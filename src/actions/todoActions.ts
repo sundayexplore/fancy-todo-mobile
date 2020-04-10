@@ -1,7 +1,8 @@
 import axios from "axios";
+import { decideAPI } from '../utils/config';
 
 export const todoAPI = axios.create({
-  baseURL: `https://sunday-fancy-todo-api.herokuapp.com/todos`
+  baseURL: decideAPI('todos')
 });
 
 interface TodoData {
