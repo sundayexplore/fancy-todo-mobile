@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, StyleSheet } from "react-native";
 import { List, Provider } from "react-native-paper";
 
-import { Props } from "..";
+import { Props } from "@/components";
 
 export default ({ navigation, route, todo, style }: Props) => {
   return (
@@ -10,6 +10,7 @@ export default ({ navigation, route, todo, style }: Props) => {
       <View style={[style, customStyles.leftMenuContainer]}>
         <List.Item
           left={props => <List.Icon {...props} icon="folder" />}
+          title="Todo!"
         />
       </View>
     </Provider>

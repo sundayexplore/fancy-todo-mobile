@@ -1,10 +1,10 @@
 import React from "react";
 import { View, KeyboardAvoidingView, Platform, Button } from "react-native";
-import { SignInForm } from "../../components";
+import { SignInForm } from "@/components";
 
-import { Props } from "../../components";
+import { Props } from "@/components";
 
-import styles from "../../styles";
+import styles from "@/styles";
 
 export default ({ navigation, route }: Props) => {
   return (

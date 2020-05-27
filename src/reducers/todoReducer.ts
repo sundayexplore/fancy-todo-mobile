@@ -6,7 +6,7 @@ const initialState = {
 
 export default (state = initialState, action: Action) => {
   switch (action.type) {
-    case "CREATE_TODO":
+    case "ADD_TODO":
       return {
         ...state,
         todos: state.todos.concat(action.payload.todoData)

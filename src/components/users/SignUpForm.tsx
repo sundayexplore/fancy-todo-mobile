@@ -16,9 +16,9 @@ import {
 } from "react-native-paper";
 import { responsiveWidth } from "react-native-responsive-dimensions";
 
-import { Props } from "../";
-import styles from "../../styles";
-import { userAPI, signInCompleted } from "../../actions/userActions";
+import { Props } from "@/components";
+import styles from "@/styles";
+import { userAPI, signInCompleted } from "@/actions/userActions";
 
 export default ({ navigation, route }: Props) => {
   const dispatch = useDispatch();

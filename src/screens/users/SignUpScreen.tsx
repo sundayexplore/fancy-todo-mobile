@@ -6,11 +6,11 @@ import {
   Button,
   ScrollView
 } from "react-native";
-import { SignUpForm } from "../../components";
+import { SignUpForm } from "@/components";
 
-import { Props } from "../../components";
+import { Props } from "@/components";
 
-import styles from "../../styles";
+import styles from "@/styles";
 
 export default ({ navigation, route }: Props) => {
   return (

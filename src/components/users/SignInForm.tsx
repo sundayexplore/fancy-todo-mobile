@@ -19,9 +19,9 @@ import {
   responsiveWidth
 } from "react-native-responsive-dimensions";
 
-import { userAPI, signInCompleted } from "../../actions/userActions";
-import { Props } from "../";
-import styles from "../../styles";
+import { userAPI, signInCompleted } from "@/actions/userActions";
+import { Props } from "@/components";
+import styles from "@/styles";
 
 export default ({ navigation, route }: Props) => {
   const dispatch = useDispatch();

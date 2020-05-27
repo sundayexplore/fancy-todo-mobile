@@ -9,10 +9,10 @@ import {
 import { useSelector } from "react-redux";
 import { SwipeListView } from "react-native-swipe-list-view";
 import { List, Button } from "react-native-paper";
-import { responsiveWidth } from 'react-native-responsive-dimensions';
+import { responsiveWidth } from "react-native-responsive-dimensions";
 
-import { State } from "../../reducers";
-import { AddTodoModal } from "../";
+import { State } from "@/reducers";
+import { AddTodoModal } from "@/components";
 
 export default (props: any) => {
   const { navigation, route } = props;
@@ -49,7 +49,7 @@ export default (props: any) => {
         />
       </TouchableHighlight>
     );
-  }
+  };
 
   const renderHiddenItem = (data: any, rowMap: any) => {
     return (
@@ -63,37 +63,41 @@ export default (props: any) => {
         </TouchableOpacity>
       </View>
     );
-  }
+  };
 
   const renderNoTodos = () => {
     return (
       <View>
-        <AddTodoModal modalVisible={modalVisible} hideModal={hideModal} />
         <Text>No todos found!</Text>
         <Button onPress={showModal}>Add Todo</Button>
       </View>
     );
-  }
+  };
 
   const renderTodos = () => {
     return (
       <View style={styles.container}>
-      <SwipeListView
-        useFlatList={true}
-        data={todos}
-        renderItem={renderItem}
-        renderHiddenItem={renderHiddenItem}
-        leftOpenValue={75}
-        rightOpenValue={-75}
-        // previewRowKey={"0"}
-        // previewOpenValue={150}
-        // previewOpenDelay={3000}
-      />
-    </View>
+        <SwipeListView
+          useFlatList={true}
+          data={todos}
+          renderItem={renderItem}
+          renderHiddenItem={renderHiddenItem}
+          leftOpenValue={75}
+          rightOpenValue={-75}
+          // previewRowKey={"0"}
+          // previewOpenValue={150}
+          // previewOpenDelay={3000}
+        />
+      </View>
     );
-  }
+  };
 
-  return todos.length <= 0 ? renderNoTodos() : renderTodos();
+  return (
+    <>
+      <AddTodoModal modalVisible={modalVisible} hideModal={hideModal} />
+      {todos.length <= 0 ? renderNoTodos() : renderTodos()}
+    </>
+  );
 };
 
 const styles = StyleSheet.create({

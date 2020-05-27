@@ -4,9 +4,9 @@ import { Provider as PaperProvider } from "react-native-paper";
 import { Provider as ReduxProvider } from "react-redux";
 import { NavigationContainer } from "@react-navigation/native";
 
-import store from "./src/stores";
+import store from "@/stores";
 
-import { MainScreen } from "./src/screens";
+import { MainScreen } from "@/screens";
 
 export default function App() {
   return (
@@ -19,12 +19,3 @@ export default function App() {
     </ReduxProvider>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center"
-  }
-});

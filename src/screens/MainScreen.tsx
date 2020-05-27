@@ -2,8 +2,8 @@ import React from "react";
 import { useSelector } from "react-redux";
 import { createStackNavigator } from "@react-navigation/stack";
 
-import { State } from "../reducers";
-import { SignInScreen, SignUpScreen, TodoListScreen } from "./";
+import { State } from "@/reducers";
+import { SignInScreen, SignUpScreen, TodoListScreen } from "@/screens";
 
 const Stack = createStackNavigator();
 

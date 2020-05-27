@@ -1,32 +1,38 @@
 import axios from "axios";
-import { decideAPI } from '../utils/config';
-
-export const todoAPI = axios.create({
-  baseURL: decideAPI('todos')
-});
+import { decideAPI } from "@/utils/config";
 
 interface TodoData {
   name: string;
   dueDate: Date;
 }
 
-export const createTodo = (todoData: TodoData) => ({
-  type: "CREATE_TODO",
-  payload: {
-    todoData
-  }
+export const todoAPI = axios.create({
+  baseURL: decideAPI("todos")
 });
 
-export const updateTodo = (todoData: TodoData) => ({
-  type: "UPDATE_TODO",
-  payload: {
-    todoData
-  }
-});
+export const addTodo = (todoData: TodoData) => {
+  return {
+    type: "ADD_TODO",
+    payload: {
+      todoData
+    }
+  };
+}
 
-export const deleteTodo = (todoData: TodoData) => ({
-  type: "DELETE_TODO",
-  payload: {
-    todoData
-  }
-});
+export const updateTodo = (todoData: TodoData) => {
+  return {
+    type: "UPDATE_TODO",
+    payload: {
+      todoData
+    }
+  };
+}
+
+export const deleteTodo = (todoData: TodoData) => {
+  return {
+    type: "DELETE_TODO",
+    payload: {
+      todoData
+    }
+  };
+}
