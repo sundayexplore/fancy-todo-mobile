@@ -7,16 +7,16 @@ import {
   View
 } from "react-native";
 import { useSelector } from "react-redux";
-import { SwipeListView } from "react-native-swipe-list-view";
-import { List, Button } from "react-native-paper";
-import { responsiveWidth } from "react-native-responsive-dimensions";
+// import { SwipeListView } from "react-native-swipe-list-view";
+import { Button } from "native-base";
+import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 
-import { State } from "@/reducers";
+import { IRootState } from "@/types";
 import { AddTodoModal } from "@/components";
 
 export default (props: any) => {
   const { navigation, route } = props;
-  const todos = useSelector((state: State) => state.todoReducer.todos);
+  const todos = useSelector((state: IRootState) => state.todo.todos);
   const [modalVisible, setModalVisible] = useState(false);
 
   const showModal = () => {
@@ -40,13 +40,13 @@ export default (props: any) => {
         style={styles.rowFront}
         underlayColor={"#AAA"}
       >
-        <List.Item
+        {/* <List.Item
           style={customStyles.todoListItem}
           title="First Item"
           description="Item description"
           left={(props) => <List.Icon {...props} icon="folder" />}
           underlayColor={"#AAA"}
-        />
+        /> */}
       </TouchableHighlight>
     );
   };
@@ -77,17 +77,6 @@ export default (props: any) => {
   const renderTodos = () => {
     return (
       <View style={styles.container}>
-        <SwipeListView
-          useFlatList={true}
-          data={todos}
-          renderItem={renderItem}
-          renderHiddenItem={renderHiddenItem}
-          leftOpenValue={75}
-          rightOpenValue={-75}
-          // previewRowKey={"0"}
-          // previewOpenValue={150}
-          // previewOpenDelay={3000}
-        />
       </View>
     );
   };
@@ -144,6 +133,6 @@ const styles = StyleSheet.create({
 
 const customStyles = StyleSheet.create({
   todoListItem: {
-    width: responsiveWidth(80)
+    width: wp(80)
   }
 });

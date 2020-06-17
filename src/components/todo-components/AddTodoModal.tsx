@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Keyboard, AsyncStorage } from "react-native";
-import { Modal, Portal, Card, Button, TextInput } from "react-native-paper";
-import { responsiveWidth } from 'react-native-responsive-dimensions';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { StyleSheet, Keyboard, AsyncStorage, View } from "react-native";
+// import { Modal, Portal, Card, Button, TextInput } from "react-native-paper";
+import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
 import styles from "@/styles";
 import { todoAPI, addTodo } from "@/actions/todoActions";
@@ -98,65 +97,66 @@ export default (props: any) => {
   }
 
   return (
-    <Portal>
-      <Modal contentContainerStyle={[styles.centerOnly, customStyles.modalContainer]} visible={modalVisible} onDismiss={hideModal}>
-        <Card style={customStyles.cardContainer}>
-          <Card.Title title="Add Todo" style={customStyles.cardTitle} />
-          <Card.Content>
-            <TextInput 
-              style={customStyles.textInput} 
-              mode="flat" 
-              label="Todo" 
-              value={todoData.name} 
-              multiline={true} 
-              onChangeText={(text) => handleTodoChange('name', text)}
-              autoFocus={true}
-            />
-            <TextInput 
-              style={customStyles.textInput} 
-              mode="flat" 
-              label="Due Date" 
-              value={todoData.dueDate.toLocaleDateString()} 
-              multiline={true}
-              onFocus={() => showPicker('date')}
-              onKeyPress={() => showPicker('date')}
-            />
-            <TextInput 
-              style={customStyles.textInput} 
-              mode="flat" 
-              label="Due Time" 
-              value={todoData.dueDate.toLocaleTimeString()} 
-              multiline={true}
-              onFocus={() => showPicker('time')}
-              onKeyPress={() => showPicker('time')}
-            />
-            {
-              showDatePicker && 
-              <DateTimePicker
-                value={todoData.dueDate}
-                mode="date"
-                minimumDate={new Date(Date.now())}
-                onChange={(event, selectedDate) => handleTodoChange('dueDate', selectedDate)}
-                onResponderReject={() => console.log("DATE CANCEL!")}
-              />
-            }
-            {
-              showTimePicker &&
-              <DateTimePicker
-                value={todoData.dueDate}
-                mode="time"
-                minimumDate={new Date(Date.now())}
-                onChange={(event, selectedTime) => handleTodoChange('dueTime', selectedTime)}
-              />
-            }
-          </Card.Content>
-          <Card.Actions style={customStyles.cardActions}>
-            <Button onPress={hideModal}>Cancel</Button>
-            <Button onPress={handleAddTodo}>Add</Button>
-          </Card.Actions>
-        </Card>
-      </Modal>
-    </Portal>
+    // <Portal>
+    //   <Modal contentContainerStyle={[styles.centerOnly, customStyles.modalContainer]} visible={modalVisible} onDismiss={hideModal}>
+    //     <Card style={customStyles.cardContainer}>
+    //       <Card.Title title="Add Todo" style={customStyles.cardTitle} />
+    //       <Card.Content>
+    //         <TextInput 
+    //           style={customStyles.textInput} 
+    //           mode="flat" 
+    //           label="Todo" 
+    //           value={todoData.name} 
+    //           multiline={true} 
+    //           onChangeText={(text) => handleTodoChange('name', text)}
+    //           autoFocus={true}
+    //         />
+    //         <TextInput 
+    //           style={customStyles.textInput} 
+    //           mode="flat" 
+    //           label="Due Date" 
+    //           value={todoData.dueDate.toLocaleDateString()} 
+    //           multiline={true}
+    //           onFocus={() => showPicker('date')}
+    //           onKeyPress={() => showPicker('date')}
+    //         />
+    //         <TextInput 
+    //           style={customStyles.textInput} 
+    //           mode="flat" 
+    //           label="Due Time" 
+    //           value={todoData.dueDate.toLocaleTimeString()} 
+    //           multiline={true}
+    //           onFocus={() => showPicker('time')}
+    //           onKeyPress={() => showPicker('time')}
+    //         />
+    //         {
+    //           showDatePicker && 
+    //           <DateTimePicker
+    //             value={todoData.dueDate}
+    //             mode="date"
+    //             minimumDate={new Date(Date.now())}
+    //             onChange={(event, selectedDate) => handleTodoChange('dueDate', selectedDate)}
+    //             onResponderReject={() => console.log("DATE CANCEL!")}
+    //           />
+    //         }
+    //         {
+    //           showTimePicker &&
+    //           <DateTimePicker
+    //             value={todoData.dueDate}
+    //             mode="time"
+    //             minimumDate={new Date(Date.now())}
+    //             onChange={(event, selectedTime) => handleTodoChange('dueTime', selectedTime)}
+    //           />
+    //         }
+    //       </Card.Content>
+    //       <Card.Actions style={customStyles.cardActions}>
+    //         <Button onPress={hideModal}>Cancel</Button>
+    //         <Button onPress={handleAddTodo}>Add</Button>
+    //       </Card.Actions>
+    //     </Card>
+    //   </Modal>
+    // </Portal>
+    <View></View>
   );
 };
 
@@ -168,16 +168,16 @@ const customStyles = StyleSheet.create({
   },
   cardContainer: {
     padding: 20,
-    width: responsiveWidth(90),
+    width: wp(90),
     justifyContent: 'center',
     alignContent: 'center',
     alignItems: 'center'
   },
   cardTitle: {
-    width: responsiveWidth(30)
+    width: wp(30)
   },
   textInput: {
-    width: responsiveWidth(70)
+    width: wp(70)
   },
   cardActions: {
     justifyContent: 'flex-end'

@@ -34,11 +34,32 @@ export interface IOAuthUser {
  */
 
 export interface IRootState {
-  users: IUser;
-  todos: ITodo[]
+  user: IUserReducer;
+  todo: ITodoReducer;
 }
 
 export interface IAction {
   type: string;
   payload: any;
+}
+
+export interface IUserReducer {
+  currentUser: IUser;
+  signedIn: boolean;
+}
+
+export interface ITodoReducer {
+  todos: ITodo[];
+}
+
+/**
+ * React Navigation Native Custom Types and Interfaces
+ */
+
+export type RootStackParamList =  {
+  Home: {
+    currentUser: IUser;
+  };
+  SignUp: undefined;
+  SignIn: undefined;
 }

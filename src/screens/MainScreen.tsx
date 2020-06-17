@@ -2,21 +2,20 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import { State } from '@/reducers';
-import { SignInScreen, SignUpScreen, TodoListScreen } from '@/screens';
+import { IRootState } from '@/types';
+import { SignInScreen, SignUpScreen, MainUserScreen } from '@/screens';
 
 const Stack = createStackNavigator();
 
 export default () => {
-  const signedIn = useSelector((state: State) => state.userReducer.isSignedIn);
+  const signedIn = useSelector((state: IRootState) => state.user.signedIn);
 
   return (
     <Stack.Navigator>
       {signedIn ? (
         <Stack.Screen
-          name="TodoList"
-          component={TodoListScreen}
-          options={{ headerTitle: 'Todo List' }}
+          name="Home"
+          component={MainUserScreen}
         />
       ) : (
         <>

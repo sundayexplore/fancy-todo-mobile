@@ -1,23 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import {
   View,
   TouchableWithoutFeedback,
   Keyboard,
   AsyncStorage,
-  StyleSheet
+  StyleSheet,
+  Text
 } from "react-native";
 import { useDispatch } from "react-redux";
 import {
-  TextInput,
+  Input,
   Button,
-  Card,
-  Snackbar,
-  Subheading
-} from "react-native-paper";
-import { responsiveWidth } from "react-native-responsive-dimensions";
+} from "native-base";
+import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 
 import { Props } from "@/components";
-import styles from "@/styles";
+import { globalStyles } from "@/styles";
 import { userAPI, signInCompleted } from "@/actions/userActions";
 
 export default ({ navigation, route }: Props) => {
@@ -40,56 +38,32 @@ export default ({ navigation, route }: Props) => {
     currentError: "",
     snackbarVisible: false
   });
-  let firstNameRef: any = null;
-  let lastNameRef: any = null;
-  let usernameRef: any = null;
-  let emailRef: any = null;
-  let passwordRef: any = null;
+  const firstNameRef: any = useRef(null);
+  const lastNameRef: any = useRef(null);
+  const usernameRef: any = useRef(null);
+  const emailRef: any = useRef(null);
+  const passwordRef: any = useRef(null);
 
-  const handleTextInputRefs = (field: string, targetRef: any) => {
+  const handleInputFocus = (field: string) => {
     switch (field) {
       case "firstName":
-        firstNameRef = targetRef;
+        firstNameRef.current?.focusTextInput();
         break;
 
       case "lastName":
-        lastNameRef = targetRef;
+        lastNameRef.current.focus();
         break;
 
       case "username":
-        usernameRef = targetRef;
+        usernameRef.current.focus();
         break;
 
       case "email":
-        emailRef = targetRef;
+        emailRef.current.focus();
         break;
 
       case "password":
-        passwordRef = targetRef;
-        break;
-    }
-  };
-
-  const handleTextInputFocus = (field: string) => {
-    switch (field) {
-      case "firstName":
-        firstNameRef.focus();
-        break;
-
-      case "lastName":
-        lastNameRef.focus();
-        break;
-
-      case "username":
-        usernameRef.focus();
-        break;
-
-      case "email":
-        emailRef.focus();
-        break;
-
-      case "password":
-        passwordRef.focus();
+        passwordRef.current.focus();
         break;
     }
   };
@@ -160,7 +134,7 @@ export default ({ navigation, route }: Props) => {
     checkError();
     if (
       Object.values(signUpData.errors).every(
-        (currentValue) => currentValue === false
+        (currentValue: any) => currentValue === false
       )
     ) {
       try {
@@ -188,98 +162,98 @@ export default ({ navigation, route }: Props) => {
 
   return (
     <TouchableWithoutFeedback onPress={handleDismiss}>
-      <View style={[styles.centerOnly, customStyles.container]}>
-        <Snackbar
+      <View style={[globalStyles.centerOnly, styles.container]}>
+        {/* <Snackbar
           visible={signUpData.snackbarVisible}
           onDismiss={dismissSnackbar}
         >
           {signUpData.currentError}
-        </Snackbar>
-        <TextInput
+        </Snackbar> */}
+        <Input
           label="First Name"
-          error={signUpData.errors.firstName}
+          // error={signUpData.errors.firstName}
           onChangeText={(text) => handleChange(text, "firstName")}
-          style={customStyles.textField}
+          style={styles.textField}
           value={signUpData.userData.firstName}
-          mode="outlined"
+          // mode="outlined"
           autoCompleteType="name"
           autoFocus={true}
           returnKeyType="next"
-          ref={ref => handleTextInputRefs('firstName', ref)}
-          onSubmitEditing={() => handleTextInputFocus('lastName')}
+          ref={firstNameRef}
+          onSubmitEditing={() => handleInputFocus('lastName')}
         />
-        <TextInput
+        <Input
           label="Last Name"
           onChangeText={(text) => handleChange(text, "lastName")}
-          style={customStyles.textField}
+          style={styles.textField}
           value={signUpData.userData.lastName}
-          mode="outlined"
+          // mode="outlined"
           autoCompleteType="name"
           returnKeyType="next"
-          ref={ref => handleTextInputRefs('lastName', ref)}
-          onSubmitEditing={() => handleTextInputFocus('username')}
+          ref={lastNameRef}
+          onSubmitEditing={() => handleInputFocus('username')}
         />
-        <TextInput
+        <Input
           label="Username"
-          error={signUpData.errors.username}
+          // error={signUpData.errors.username}
           onChangeText={(text) => handleChange(text, "username")}
-          style={customStyles.textField}
+          style={styles.textField}
           value={signUpData.userData.username}
-          mode="outlined"
+          // mode="outlined"
           autoCapitalize="none"
           autoCompleteType="username"
           returnKeyType="next"
-          ref={ref => handleTextInputRefs('username', ref)}
-          onSubmitEditing={() => handleTextInputFocus('email')}
+          ref={usernameRef}
+          onSubmitEditing={() => handleInputFocus('email')}
         />
-        <TextInput
+        <Input
           label="Email"
-          error={signUpData.errors.email}
+          // error={signUpData.errors.email}
           onChangeText={(text) => handleChange(text, "email")}
-          style={customStyles.textField}
+          style={styles.textField}
           value={signUpData.userData.email}
-          mode="outlined"
+          // mode="outlined"
           autoCapitalize="none"
           autoCompleteType="email"
           returnKeyType="next"
-          ref={ref => handleTextInputRefs('email', ref)}
-          onSubmitEditing={() => handleTextInputFocus('password')}
+          ref={emailRef}
+          onSubmitEditing={() => handleInputFocus('password')}
         />
-        <TextInput
+        <Input
           label="Password"
-          error={signUpData.errors.password}
+          // error={signUpData.errors.password}
           onChangeText={(text) => handleChange(text, "password")}
-          style={customStyles.textField}
+          style={styles.textField}
           value={signUpData.userData.password}
-          mode="outlined"
+          // mode="outlined"
           secureTextEntry={true}
           autoCapitalize="none"
-          ref={ref => handleTextInputRefs('password', ref)}
+          ref={passwordRef}
         />
         <Button
-          style={customStyles.button}
-          mode="contained"
+          style={styles.button}
+          // mode="contained"
           onPress={handleSubmit}
         >
           Sign Up
         </Button>
         <View>
-          <Subheading
+          <Text
             onPress={() => {
               navigation.navigate("SignIn");
             }}
           >
             Have an account? Sign In
-          </Subheading>
+          </Text>
         </View>
       </View>
     </TouchableWithoutFeedback>
   );
 };
 
-const customStyles = StyleSheet.create({
+const styles = StyleSheet.create({
   textField: {
-    width: responsiveWidth(75),
+    width: wp('75%'),
     margin: 15
   },
   container: {

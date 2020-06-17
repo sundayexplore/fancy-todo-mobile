@@ -1,10 +1,8 @@
-import Constants from 'expo-constants';
-
-const { manifest } = Constants;
+import Config from 'react-native-config';
 
 export const decideAPI = (baseEnpoint: string = '', port: string | number = 3000) => {
-  const defaultAPI = `http://${manifest.debuggerHost?.split(':').shift()?.concat(`:${port}`)}/${baseEnpoint}`;
-  switch (process.env.NODE_ENV) {
+  const defaultAPI = `http://localhost:${port}/${baseEnpoint}`;
+  switch (Config.NODE_ENV) {
     case 'development':
       return defaultAPI;
   
