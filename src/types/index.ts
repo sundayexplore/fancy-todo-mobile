@@ -23,6 +23,7 @@ export interface IUser {
 }
 
 export interface ISignIn {
+  [key: string]: string;
   userIdentifier: string;
   password: string;
 }

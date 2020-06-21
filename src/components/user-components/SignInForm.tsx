@@ -8,7 +8,7 @@ import {
   TextInput as TextInputType,
 } from 'react-native';
 import { Button } from 'react-native-elements';
-import { TextInput } from 'react-native-paper';
+import { TextInput, HelperText } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
 import {
   heightPercentageToDP as hp,
@@ -28,12 +28,6 @@ export default function SignInForm({}: ISignInFormProps) {
     password: '',
   });
   const [signInErrors, setSignInErrors] = useState<ISignInValidation>({
-    userIdentifier: false,
-    password: false,
-  });
-  const [signInErrorMessages, setSignInErrorMessages] = useState<
-    ISignInValidation
-  >({
     userIdentifier: '',
     password: '',
   });
@@ -44,7 +38,13 @@ export default function SignInForm({}: ISignInFormProps) {
   const userIdentifierTextInputRef = useRef<TextInputType>(null);
   const passwordTextInputRef = useRef<TextInputType>(null);
 
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (Object.values(signInData).every((signInDataVal) => signInDataVal)) {
+      setSignInButtonDisabled(false);
+    } else {
+      setSignInButtonDisabled(true);
+    }
+  }, [signInData]);
 
   const handleTextInputFocus = (field: string) => {
     checkErrors();
@@ -60,9 +60,10 @@ export default function SignInForm({}: ISignInFormProps) {
   };
 
   const handleChangeText = (value: string, target: string) => {
-    const changeTarget: any = { ...signInData };
-    changeTarget.userData[target] = value;
-    setSignInData(changeTarget);
+    setSignInData({
+      ...signInData,
+      [target]: value
+    });
   };
 
   const checkErrors = (): boolean => {
@@ -72,33 +73,25 @@ export default function SignInForm({}: ISignInFormProps) {
       password: CustomValidator.password(password),
     };
 
-    let result = true;
+    const statuses = [];
 
     for (const errorKey in errorMessages) {
-      if (errorMessages[errorKey] as string) {
+      if (errorMessages[errorKey]) {
         setSignInErrors({
           ...signInErrors,
-          [errorKey]: true,
-        });
-        setSignInErrorMessages({
-          ...signInErrorMessages,
           [errorKey]: errorMessages[errorKey],
         });
-        result = false;
+        statuses.push(false);
       } else {
         setSignInErrors({
           ...signInErrors,
-          [errorKey]: false,
-        });
-        setSignInErrorMessages({
-          ...signInErrorMessages,
           [errorKey]: '',
         });
-        result = true;
+        statuses.push(true);
       }
     }
 
-    return result;
+    return statuses.every(status => status);
   };
 
   const handleSignIn = async () => {
@@ -110,8 +103,8 @@ export default function SignInForm({}: ISignInFormProps) {
           userIdentifier,
           password,
         });
-        await AsyncStorage.setItem('token', data.token);
-        dispatch(signIn(data));
+        // await AsyncStorage.setItem('token', data.token);
+        // dispatch(signIn(data));
         setLoading(false);
       } catch (err) {
         console.log({
@@ -141,7 +134,11 @@ export default function SignInForm({}: ISignInFormProps) {
           blurOnSubmit={false}
           accessibilityStates
           mode="outlined"
+          error={signInErrors.userIdentifier}
         />
+        <HelperText type="error" visible={signInErrors.userIdentifier}>
+          {signInErrors.userIdentifier}
+        </HelperText>
         <TextInput
           ref={passwordTextInputRef}
           label="Password"
@@ -153,6 +150,7 @@ export default function SignInForm({}: ISignInFormProps) {
           accessibilityStates
           mode="outlined"
           style={styles.textInput}
+          error={signInErrors.password}
         />
         <Button
           title="Sign In"
