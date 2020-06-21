@@ -22,6 +22,29 @@ export interface IUser {
   email: string;
 }
 
+export interface ISignIn {
+  userIdentifier: string;
+  password: string;
+}
+
+export interface ISignUp extends IUser {
+  password: string;
+}
+
+export interface ISignInValidation {
+  [key: string]: string | any;
+  userIdentifier: string | any;
+  password?: string | any;
+}
+
+export interface ISignUpValidation {
+  [key: string]: string | any;
+  firstName: string | any;
+  username: string | any;
+  email: string | any;
+  password: string | any;
+}
+
 export interface IOAuthUser {
   fullName: string;
   email: string;
@@ -56,10 +79,10 @@ export interface ITodoReducer {
  * React Navigation Native Custom Types and Interfaces
  */
 
-export type RootStackParamList =  {
+export type RootStackParamList = {
   Home: {
     currentUser: IUser;
   };
   SignUp: undefined;
   SignIn: undefined;
-}
+};

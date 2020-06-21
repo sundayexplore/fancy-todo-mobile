@@ -3,8 +3,9 @@ import { StyleSheet, Keyboard, AsyncStorage, View } from "react-native";
 // import { Modal, Portal, Card, Button, TextInput } from "react-native-paper";
 import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
-import styles from "@/styles";
-import { todoAPI, addTodo } from "@/actions/todoActions";
+import { globalStyles } from "@/styles";
+import { addTodo } from "@/actions/todo-actions";
+import { todoAPI } from '@/utils';
 
 export default (props: any) => {
   const { navigation, route, modalVisible, showModal, hideModal } = props;
@@ -160,7 +161,7 @@ export default (props: any) => {
   );
 };
 
-const customStyles = StyleSheet.create({
+const styles = StyleSheet.create({
   modalContainer: {
     justifyContent: 'center',
     alignContent: 'center',

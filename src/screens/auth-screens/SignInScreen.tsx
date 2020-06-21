@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, KeyboardAvoidingView } from 'react-native';
+import { View, KeyboardAvoidingView, Platform } from 'react-native';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 
@@ -26,9 +26,7 @@ export default function SignInScreen({
   return (
     <View style={globalStyles.defaultContainer}>
       <KeyboardAvoidingView
-      // style={{ flex: 1 }}
-      // behavior={Platform.OS == "ios" ? "padding" : "height"}
-      // contentContainerStyle={{flexGrow: 1}}
+      behavior={Platform.OS == "ios" ? "padding" : "height"}
       >
         <SignInForm />
       </KeyboardAvoidingView>

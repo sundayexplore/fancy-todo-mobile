@@ -1,18 +1,17 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   StyleSheet,
   Text,
   TouchableOpacity,
   TouchableHighlight,
-  View
-} from "react-native";
-import { useSelector } from "react-redux";
-// import { SwipeListView } from "react-native-swipe-list-view";
-import { Button } from "native-base";
-import { widthPercentageToDP as wp } from "react-native-responsive-screen";
+  View,
+} from 'react-native';
+import { useSelector } from 'react-redux';
+import { Button } from 'react-native-elements';
+import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
-import { IRootState } from "@/types";
-import { AddTodoModal } from "@/components";
+import { IRootState } from '@/types';
+import AddTodoModal from './AddTodoModal';
 
 export default (props: any) => {
   const { navigation, route } = props;
@@ -36,10 +35,9 @@ export default (props: any) => {
   const renderItem = (data: any) => {
     return (
       <TouchableHighlight
-        onPress={() => console.log("You touched me")}
+        onPress={() => console.log('You touched me')}
         style={styles.rowFront}
-        underlayColor={"#AAA"}
-      >
+        underlayColor={'#AAA'}>
         {/* <List.Item
           style={customStyles.todoListItem}
           title="First Item"
@@ -57,8 +55,7 @@ export default (props: any) => {
         <Text>Left</Text>
         <TouchableOpacity
           style={[styles.backRightBtn, styles.backRightBtnLeft]}
-          onPress={() => closeRow(rowMap, data.item._id)}
-        >
+          onPress={() => closeRow(rowMap, data.item._id)}>
           <Text style={styles.backTextWhite}>Close</Text>
         </TouchableOpacity>
       </View>
@@ -75,10 +72,7 @@ export default (props: any) => {
   };
 
   const renderTodos = () => {
-    return (
-      <View style={styles.container}>
-      </View>
-    );
+    return <View style={styles.container}></View>;
   };
 
   return (
@@ -91,48 +85,48 @@ export default (props: any) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "white",
-    flex: 1
+    backgroundColor: 'white',
+    flex: 1,
   },
   backTextWhite: {
-    color: "#FFF"
+    color: '#FFF',
   },
   rowFront: {
-    alignItems: "center",
-    backgroundColor: "#CCC",
-    borderBottomColor: "black",
+    alignItems: 'center',
+    backgroundColor: '#CCC',
+    borderBottomColor: 'black',
     borderBottomWidth: 1,
-    justifyContent: "center",
-    height: 50
+    justifyContent: 'center',
+    height: 50,
   },
   rowBack: {
-    alignItems: "center",
-    backgroundColor: "#DDD",
+    alignItems: 'center',
+    backgroundColor: '#DDD',
     flex: 1,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingLeft: 15
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingLeft: 15,
   },
   backRightBtn: {
-    alignItems: "center",
+    alignItems: 'center',
     bottom: 0,
-    justifyContent: "center",
-    position: "absolute",
+    justifyContent: 'center',
+    position: 'absolute',
     top: 0,
-    width: 75
+    width: 75,
   },
   backRightBtnLeft: {
-    backgroundColor: "blue",
-    right: 0
+    backgroundColor: 'blue',
+    right: 0,
   },
   backRightBtnRight: {
-    backgroundColor: "red",
-    right: 0
-  }
+    backgroundColor: 'red',
+    right: 0,
+  },
 });
 
 const customStyles = StyleSheet.create({
   todoListItem: {
-    width: wp(80)
-  }
+    width: wp(80),
+  },
 });

@@ -1,42 +1,40 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef } from 'react';
 import {
   View,
   TouchableWithoutFeedback,
   Keyboard,
   AsyncStorage,
   StyleSheet,
-  Text
-} from "react-native";
-import { useDispatch } from "react-redux";
-import {
-  Input,
-  Button,
-} from "native-base";
-import { widthPercentageToDP as wp } from "react-native-responsive-screen";
+  Text,
+} from 'react-native';
+import { useDispatch } from 'react-redux';
+import { Input, Button } from 'react-native-elements';
+import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
-import { Props } from "@/components";
-import { globalStyles } from "@/styles";
-import { userAPI, signInCompleted } from "@/actions/userActions";
+import { Props } from '@/components';
+import { globalStyles } from '@/styles';
+import { signIn } from '@/actions/user-actions';
+import { userAPI } from '@/utils';
 
 export default ({ navigation, route }: Props) => {
   const dispatch = useDispatch();
   const [signUpData, setSignUpData] = useState({
     userData: {
-      firstName: "",
-      lastName: "",
-      username: "",
-      email: "",
-      password: ""
+      firstName: '',
+      lastName: '',
+      username: '',
+      email: '',
+      password: '',
     },
     isLoading: false,
     errors: {
       firstName: false,
       username: false,
       email: false,
-      password: false
+      password: false,
     },
-    currentError: "",
-    snackbarVisible: false
+    currentError: '',
+    snackbarVisible: false,
   });
   const firstNameRef: any = useRef(null);
   const lastNameRef: any = useRef(null);
@@ -46,23 +44,23 @@ export default ({ navigation, route }: Props) => {
 
   const handleInputFocus = (field: string) => {
     switch (field) {
-      case "firstName":
+      case 'firstName':
         firstNameRef.current?.focusTextInput();
         break;
 
-      case "lastName":
+      case 'lastName':
         lastNameRef.current.focus();
         break;
 
-      case "username":
+      case 'username':
         usernameRef.current.focus();
         break;
 
-      case "email":
+      case 'email':
         emailRef.current.focus();
         break;
 
-      case "password":
+      case 'password':
         passwordRef.current.focus();
         break;
     }
@@ -80,8 +78,8 @@ export default ({ navigation, route }: Props) => {
     setSignUpData({
       ...signUpData,
       snackbarVisible: false,
-      currentError: "",
-      errors: reverseAllErrors(false)
+      currentError: '',
+      errors: reverseAllErrors(false),
     });
   };
 
@@ -96,7 +94,7 @@ export default ({ navigation, route }: Props) => {
     if (firstName.length <= 0) {
       const checkTarget = { ...signUpData };
       checkTarget.errors.firstName = true;
-      checkTarget.currentError = "First name cannot be empty!";
+      checkTarget.currentError = 'First name cannot be empty!';
       checkTarget.snackbarVisible = true;
       setSignUpData(checkTarget);
     } else if (username.length <= 0 || username.length < 6) {
@@ -126,7 +124,7 @@ export default ({ navigation, route }: Props) => {
     setSignUpData({
       ...signUpData,
       currentError: message,
-      snackbarVisible: true
+      snackbarVisible: true,
     });
   };
 
@@ -134,21 +132,21 @@ export default ({ navigation, route }: Props) => {
     checkError();
     if (
       Object.values(signUpData.errors).every(
-        (currentValue: any) => currentValue === false
+        (currentValue: any) => currentValue === false,
       )
     ) {
       try {
         await setSignUpData({ ...signUpData, isLoading: true });
-        const signUpResponse = await userAPI.post("/signup", {
-          ...signUpData.userData
+        const signUpResponse = await userAPI.post('/signup', {
+          ...signUpData.userData,
         });
-        const signInResponse = await userAPI.post("/signin", {
+        const signInResponse = await userAPI.post('/signin', {
           userIdentifier: signUpData.userData.username,
-          password: signUpData.userData.password
+          password: signUpData.userData.password,
         });
         console.log(signInResponse.data);
-        AsyncStorage.setItem("token", signInResponse.data.token);
-        dispatch(signInCompleted(signInResponse.data));
+        AsyncStorage.setItem('token', signInResponse.data.token);
+        dispatch(signIn(signInResponse.data));
       } catch (err) {
         asyncError(err.response.data.message);
       }
@@ -172,7 +170,7 @@ export default ({ navigation, route }: Props) => {
         <Input
           label="First Name"
           // error={signUpData.errors.firstName}
-          onChangeText={(text) => handleChange(text, "firstName")}
+          onChangeText={(text) => handleChange(text, 'firstName')}
           style={styles.textField}
           value={signUpData.userData.firstName}
           // mode="outlined"
@@ -184,7 +182,7 @@ export default ({ navigation, route }: Props) => {
         />
         <Input
           label="Last Name"
-          onChangeText={(text) => handleChange(text, "lastName")}
+          onChangeText={(text) => handleChange(text, 'lastName')}
           style={styles.textField}
           value={signUpData.userData.lastName}
           // mode="outlined"
@@ -196,7 +194,7 @@ export default ({ navigation, route }: Props) => {
         <Input
           label="Username"
           // error={signUpData.errors.username}
-          onChangeText={(text) => handleChange(text, "username")}
+          onChangeText={(text) => handleChange(text, 'username')}
           style={styles.textField}
           value={signUpData.userData.username}
           // mode="outlined"
@@ -209,7 +207,7 @@ export default ({ navigation, route }: Props) => {
         <Input
           label="Email"
           // error={signUpData.errors.email}
-          onChangeText={(text) => handleChange(text, "email")}
+          onChangeText={(text) => handleChange(text, 'email')}
           style={styles.textField}
           value={signUpData.userData.email}
           // mode="outlined"
@@ -222,7 +220,7 @@ export default ({ navigation, route }: Props) => {
         <Input
           label="Password"
           // error={signUpData.errors.password}
-          onChangeText={(text) => handleChange(text, "password")}
+          onChangeText={(text) => handleChange(text, 'password')}
           style={styles.textField}
           value={signUpData.userData.password}
           // mode="outlined"
@@ -233,16 +231,14 @@ export default ({ navigation, route }: Props) => {
         <Button
           style={styles.button}
           // mode="contained"
-          onPress={handleSubmit}
-        >
+          onPress={handleSubmit}>
           Sign Up
         </Button>
         <View>
           <Text
             onPress={() => {
-              navigation.navigate("SignIn");
-            }}
-          >
+              navigation.navigate('SignIn');
+            }}>
             Have an account? Sign In
           </Text>
         </View>
@@ -254,12 +250,12 @@ export default ({ navigation, route }: Props) => {
 const styles = StyleSheet.create({
   textField: {
     width: wp('75%'),
-    margin: 15
+    margin: 15,
   },
   container: {
-    backgroundColor: "#fff"
+    backgroundColor: '#fff',
   },
   button: {
-    margin: 20
-  }
+    margin: 20,
+  },
 });

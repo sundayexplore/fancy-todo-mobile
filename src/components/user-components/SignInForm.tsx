@@ -1,195 +1,181 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
-  View,
   StyleSheet,
   AsyncStorage,
-  Keyboard,
+  View,
   TouchableWithoutFeedback,
+  Keyboard,
+  TextInput as TextInputType,
 } from 'react-native';
-import {
-  Input,
-  Button,
-  Item,
-  Form,
-  Container,
-  Content,
-  Label,
-  Text,
-} from 'native-base';
+import { Button } from 'react-native-elements';
+import { TextInput } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
 
-import { userAPI, signInCompleted } from '@/actions/userActions';
-import { globalStyles } from '@/styles';
+import { ISignIn, ISignInValidation } from '@/types';
+import { signIn } from '@/actions/user-actions';
+import { userAPI, CustomValidator } from '@/utils';
 
 export interface ISignInFormProps {}
 
 export default function SignInForm({}: ISignInFormProps) {
   const dispatch = useDispatch();
-  const [signInData, setSignInData] = useState({
-    userData: {
-      userIdentifier: '',
-      password: '',
-    },
-    isLoading: false,
-    errors: {
-      userIdentifier: false,
-      password: false,
-    },
-    currentError: '',
-    snackbarVisible: false,
+  const [signInData, setSignInData] = useState<ISignIn>({
+    userIdentifier: '',
+    password: '',
   });
-  let userIdentifierRef: any = useRef(null);
-  let passwordRef: any = useRef(null);
+  const [signInErrors, setSignInErrors] = useState<ISignInValidation>({
+    userIdentifier: false,
+    password: false,
+  });
+  const [signInErrorMessages, setSignInErrorMessages] = useState<
+    ISignInValidation
+  >({
+    userIdentifier: '',
+    password: '',
+  });
+  const [loading, setLoading] = useState<boolean>(false);
+  const [signInButtonDisabled, setSignInButtonDisabled] = useState<boolean>(
+    true,
+  );
+  const userIdentifierTextInputRef = useRef<TextInputType>(null);
+  const passwordTextInputRef = useRef<TextInputType>(null);
 
-  const handleInputFocus = (field: string) => {
+  useEffect(() => {}, []);
+
+  const handleTextInputFocus = (field: string) => {
+    checkErrors();
     switch (field) {
       case 'userIdentifier':
-        userIdentifierRef.current.focus();
+        userIdentifierTextInputRef.current?.focus();
         break;
 
       case 'password':
-        passwordRef.current.focus();
+        passwordTextInputRef.current?.focus();
         break;
     }
   };
 
-  const reverseAllErrors = (target: boolean) => {
-    const errors: any = { ...signInData.errors };
-    for (const key in errors) {
-      errors[key] = target;
-    }
-    return errors;
-  };
-
-  const handleChange = (value: string, target: string) => {
+  const handleChangeText = (value: string, target: string) => {
     const changeTarget: any = { ...signInData };
     changeTarget.userData[target] = value;
     setSignInData(changeTarget);
   };
 
-  const dismissSnackbar = () => {
-    setSignInData({
-      ...signInData,
-      snackbarVisible: false,
-      currentError: '',
-      errors: reverseAllErrors(false),
-    });
-  };
+  const checkErrors = (): boolean => {
+    const { userIdentifier, password } = signInData;
+    const errorMessages: ISignInValidation = {
+      userIdentifier: CustomValidator.userIdentifier(userIdentifier),
+      password: CustomValidator.password(password),
+    };
 
-  const checkError = () => {
-    const { userIdentifier, password } = signInData.userData;
-    if (userIdentifier.length <= 0) {
-      const checkTarget = { ...signInData };
-      checkTarget.errors.userIdentifier = true;
-      checkTarget.currentError = "Email or usernmae can't be empty!";
-      checkTarget.snackbarVisible = true;
-      setSignInData(checkTarget);
-    } else if (password.length <= 0) {
-      const checkTarget = { ...signInData };
-      checkTarget.errors.password = true;
-      checkTarget.currentError = "Password can't be empty!";
-      checkTarget.snackbarVisible = true;
-      setSignInData(checkTarget);
+    let result = true;
+
+    for (const errorKey in errorMessages) {
+      if (errorMessages[errorKey] as string) {
+        setSignInErrors({
+          ...signInErrors,
+          [errorKey]: true,
+        });
+        setSignInErrorMessages({
+          ...signInErrorMessages,
+          [errorKey]: errorMessages[errorKey],
+        });
+        result = false;
+      } else {
+        setSignInErrors({
+          ...signInErrors,
+          [errorKey]: false,
+        });
+        setSignInErrorMessages({
+          ...signInErrorMessages,
+          [errorKey]: '',
+        });
+        result = true;
+      }
     }
+
+    return result;
   };
 
-  const asyncError = (message: string) => {
-    setSignInData({
-      ...signInData,
-      currentError: message,
-      snackbarVisible: true,
-    });
-  };
-
-  const handleSubmit = async () => {
-    checkError();
-    if (
-      Object.values(signInData.errors).every(
-        (currentValue) => currentValue === false,
-      )
-    ) {
+  const handleSignIn = async () => {
+    setLoading(true);
+    if (checkErrors()) {
       try {
-        const { userIdentifier, password } = signInData.userData;
+        const { userIdentifier, password } = signInData;
         const { data } = await userAPI.post('/signin', {
           userIdentifier,
           password,
         });
         await AsyncStorage.setItem('token', data.token);
-        dispatch(signInCompleted(data));
+        dispatch(signIn(data));
+        setLoading(false);
       } catch (err) {
-        asyncError(err.response.data.message);
+        console.log({
+          err,
+        });
+        setLoading(false);
       }
+    } else {
+      setLoading(false);
     }
   };
 
-  const handleDismiss = () => {
-    Keyboard.dismiss();
-    dismissSnackbar();
-  };
-
   return (
-    <TouchableWithoutFeedback onPress={handleDismiss}>
-      <Container style={[globalStyles.centerOnly, styles.container]}>
-        <Content>
-          <Form>
-            <Item floatingLabel>
-              <Label>Email or Username</Label>
-              <Input
-                // error={signInData.errors.userIdentifier}
-                style={styles.textField}
-                value={signInData.userData.userIdentifier}
-                onChangeText={(text) => handleChange(text, 'userIdentifier')}
-                // mode="outlined"
-                autoCapitalize="none"
-                autoCompleteType="email"
-                autoFocus
-                returnKeyType="next"
-                ref={userIdentifierRef}
-                onSubmitEditing={() => handleInputFocus('password')}
-              />
-            </Item>
-            <Item floatingLabel>
-              <Label>Password</Label>
-              <Input
-                ref={passwordRef}
-                // error={signInData.errors.password}
-                style={styles.textField}
-                value={signInData.userData.password}
-                onChangeText={(text) => handleChange(text, 'password')}
-                // mode="outlined"
-                secureTextEntry={true}
-                autoCapitalize="none"
-              />
-            </Item>
-            <Button
-              style={styles.button}
-              // mode="contained"
-              onPress={handleSubmit}>
-              <Text>Sign In</Text>
-            </Button>
-          </Form>
-        </Content>
-      </Container>
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View style={styles.wrapper}>
+        <TextInput
+          ref={userIdentifierTextInputRef}
+          label="Email or Username"
+          placeholder="johndoe@email.com"
+          value={signInData.userIdentifier}
+          onChangeText={(text) => handleChangeText(text, 'userIdentifier')}
+          autoCapitalize="none"
+          autoCompleteType="email"
+          autoFocus
+          returnKeyType="next"
+          onSubmitEditing={() => handleTextInputFocus('password')}
+          blurOnSubmit={false}
+          accessibilityStates
+          mode="outlined"
+        />
+        <TextInput
+          ref={passwordTextInputRef}
+          label="Password"
+          placeholder="Password"
+          value={signInData.password}
+          onChangeText={(text) => handleChangeText(text, 'password')}
+          secureTextEntry={true}
+          autoCapitalize="none"
+          accessibilityStates
+          mode="outlined"
+          style={styles.textInput}
+        />
+        <Button
+          title="Sign In"
+          style={styles.button}
+          onPress={handleSignIn}
+          loading={loading}
+          disabled={signInButtonDisabled}
+        />
+      </View>
     </TouchableWithoutFeedback>
   );
 }
 
 const styles = StyleSheet.create({
-  textField: {
-    width: wp(75),
-    margin: 15,
+  textInput: {
+    width: wp('70%'),
+    marginVertical: hp('3%'),
   },
   button: {
-    margin: 20,
+    // margin: 20,
   },
-  snackbarError: {
-    backgroundColor: 'red',
-  },
-  container: {
+  wrapper: {
     backgroundColor: '#fff',
+    justifyContent: 'center',
   },
 });

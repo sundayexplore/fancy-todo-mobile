@@ -3,7 +3,9 @@ import { useSelector } from 'react-redux';
 import { createStackNavigator } from '@react-navigation/stack';
 
 import { IRootState } from '@/types';
-import { SignInScreen, SignUpScreen, MainUserScreen } from '@/screens';
+import SignInScreen from './auth-screens/SignInScreen';
+import SignUpScreen from './auth-screens/SignUpScreen';
+import HomeScreen from './HomeScreen';
 
 const Stack = createStackNavigator();
 
@@ -15,7 +17,7 @@ export default () => {
       {signedIn ? (
         <Stack.Screen
           name="Home"
-          component={MainUserScreen}
+          component={HomeScreen}
         />
       ) : (
         <>
@@ -25,6 +27,7 @@ export default () => {
             options={{
               title: 'Sign In',
               animationTypeForReplace: 'pop',
+              headerShown: false
             }}
           />
           <Stack.Screen
@@ -33,6 +36,7 @@ export default () => {
             options={{
               title: 'Sign Up',
               animationTypeForReplace: 'pop',
+              headerShown: false
             }}
           />
         </>

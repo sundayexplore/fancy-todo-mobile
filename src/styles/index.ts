@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { DefaultTheme, Theme } from 'react-native-paper';
 
 export const globalStyles =  StyleSheet.create({
   centerOnly: {
@@ -15,3 +16,12 @@ export const globalStyles =  StyleSheet.create({
     alignContent: 'center'
   }
 });
+
+export const paperTheme: Theme = {
+  ...DefaultTheme,
+  roundness: 2,
+  colors: {
+    ...DefaultTheme.colors,
+    primary: '#2089dc'
+  }
+};
