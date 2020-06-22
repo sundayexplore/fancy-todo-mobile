@@ -104,21 +104,37 @@ export default ({}: ISignUpFormProps) => {
     setLoading(true);
     if (checkErrors()) {
       try {
-        await userAPI(netInfo.details.ipAddress!).post('/signup', {
-          ...signUpData,
-        });
         const { data } = await userAPI(netInfo.details.ipAddress!).post(
-          '/signin',
+          '/signup',
           {
-            userIdentifier: signUpData.username,
-            password: signUpData.password,
+            ...signUpData,
           },
         );
-        // AsyncStorage.setItem('token', signInResponse.data.token);
-        // dispatch(signIn(signInResponse.data));
+        await AsyncStorage.multiSet([
+          ['currentUser', JSON.stringify(data.user)],
+          ['act', data.tokens.accessToken],
+          ['rft', data.tokens.refreshToken],
+        ]);
+        dispatch(signIn(data.user));
+        setSnackbar(data.message);
         setLoading(false);
       } catch (err) {
-        setSnackbar(err.response.data.message);
+        /**
+         * TODO: Create handler for ECONNREFUSE
+         */
+        const errorData = err.response.data;
+        setSnackbar(errorData.message);
+
+        if (errorData.messages) {
+          const errorMessages = {} as ISignUpValidation;
+
+          for (const errorMessage of errorData.messages) {
+            errorMessage[errorMessage.name] = errorMessage.message;
+          }
+
+          setSignUpErrors(errorMessages);
+        }
+
         setLoading(false);
       }
     } else {

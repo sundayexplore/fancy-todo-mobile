@@ -82,18 +82,41 @@ export default function SignInForm({}: ISignInFormProps) {
     setLoading(true);
     if (checkErrors()) {
       try {
-        const { userIdentifier, password } = signInData;
         const { data } = await userAPI(netInfo.details.ipAddress!).post(
           '/signin',
           {
-            ...signInData
+            ...signInData,
           },
         );
-        // await AsyncStorage.setItem('token', data.token);
-        // dispatch(signIn(data));
+
+        await AsyncStorage.multiSet([
+          ['currentUser', JSON.stringify(data.user)],
+          ['act', data.tokens.accessToken],
+          ['rft', data.tokens.refreshToken],
+        ]);
+
+        dispatch(signIn(data.user));
+
         setLoading(false);
       } catch (err) {
-        setSnackbar(err.response.data.message);
+        /**
+         * TODO: Create handler for ECONNREFUSE
+         */
+        const errorData = err.response.data;
+        setSnackbar(errorData.message);
+
+        if (errorData.messages) {
+          const errorMessages = {} as ISignInValidation;
+
+          for (const errorMessage of errorData.messages) {
+            errorMessage[errorMessage.name] = errorMessage.message;
+          }
+
+          setSignInErrors(errorMessages);
+        }
+
+        setLoading(false);
+
         setLoading(false);
       }
     } else {
@@ -117,7 +140,6 @@ export default function SignInForm({}: ISignInFormProps) {
           onSubmitEditing={() => handleTextInputFocus('password')}
           blurOnSubmit={false}
           accessibilityStates
-          mode="outlined"
           error={signInErrors.userIdentifier}
         />
         <HelperText type="error" visible={signInErrors.userIdentifier}>
@@ -135,7 +157,6 @@ export default function SignInForm({}: ISignInFormProps) {
           secureTextEntry={true}
           autoCapitalize="none"
           accessibilityStates
-          mode="outlined"
           error={signInErrors.password}
         />
         <HelperText type="error" visible={signInErrors.password}>
