@@ -1,7 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
-  Platform,
   Keyboard,
   TouchableWithoutFeedback,
   StyleSheet,
@@ -9,7 +8,13 @@ import {
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Paragraph, Button, Title, Subheading } from 'react-native-paper';
+import {
+  Paragraph,
+  Button,
+  Title,
+  Subheading,
+  Snackbar,
+} from 'react-native-paper';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -34,30 +39,44 @@ export default function SignInScreen({
   navigation,
   route,
 }: ISignInScreenProps) {
+  const [snackbar, setSnackbar] = useState<string>('');
+
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <KeyboardAwareScrollView style={{ backgroundColor: '#fff' }}>
-        <View style={styles.wrapper}>
-          <View style={styles.titleView}>
-            <Title style={styles.title}>Welcome back!</Title>
-            <Subheading style={styles.subTitle}>
-              Glad to see you again.
-            </Subheading>
+    <>
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <KeyboardAwareScrollView style={{ backgroundColor: '#fff' }}>
+          <View style={styles.wrapper}>
+            <View style={styles.titleView}>
+              <Title style={styles.title}>Welcome back!</Title>
+              <Subheading style={styles.subTitle}>
+                Glad to see you again.
+              </Subheading>
+            </View>
+            <SignInForm snackbar={snackbar} setSnackbar={setSnackbar} />
+            <View style={styles.suggestionView}>
+              <Paragraph>Don't have an account?</Paragraph>
+              <Button
+                style={styles.suggestionButton}
+                mode="text"
+                accessibilityStates
+                onPress={() => navigation.navigate('SignUp')}>
+                Sign Up
+              </Button>
+            </View>
           </View>
-          <SignInForm />
-          <View style={styles.suggestionView}>
-            <Paragraph>Don't have an account?</Paragraph>
-            <Button
-              style={styles.suggestionButton}
-              mode="text"
-              accessibilityStates
-              onPress={() => navigation.navigate('SignUp')}>
-              Sign Up
-            </Button>
-          </View>
-        </View>
-      </KeyboardAwareScrollView>
-    </TouchableWithoutFeedback>
+        </KeyboardAwareScrollView>
+      </TouchableWithoutFeedback>
+      <Snackbar
+        visible={snackbar.length > 0}
+        onDismiss={() => setSnackbar('')}
+        action={{
+          label: 'Dismiss',
+          onPress: () => setSnackbar(''),
+        }}
+        accessibilityStates>
+        {snackbar}
+      </Snackbar>
+    </>
   );
 }
 
@@ -83,5 +102,5 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: hp('8%'),
     paddingBottom: hp('4%'),
-  }
+  },
 });

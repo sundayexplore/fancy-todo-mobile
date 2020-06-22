@@ -6,7 +6,7 @@ import {
   TextInput as TextInputType,
 } from 'react-native';
 import { Button } from 'react-native-elements';
-import { TextInput, HelperText, Snackbar } from 'react-native-paper';
+import { TextInput, HelperText } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
 import {
   heightPercentageToDP as hp,
@@ -18,16 +18,18 @@ import { ISignIn, ISignInValidation } from '@/types';
 import { signIn } from '@/actions/user-actions';
 import { userAPI, CustomValidator } from '@/utils';
 
-export interface ISignInFormProps {}
+export interface ISignInFormProps {
+  snackbar: string;
+  setSnackbar: (message: string) => void;
+}
 
-export default function SignInForm({}: ISignInFormProps) {
+export default function SignInForm({ snackbar, setSnackbar }: ISignInFormProps) {
   const dispatch = useDispatch();
   const netInfo = useNetInfo() as NetInfoWifiState;
   const [signInData, setSignInData] = useState<ISignIn>({
     userIdentifier: '',
     password: '',
   });
-  const [snackbar, setSnackbar] = useState<string>('');
   const [signInErrors, setSignInErrors] = useState<ISignInValidation>({
     userIdentifier: '',
     password: '',
@@ -175,17 +177,6 @@ export default function SignInForm({}: ISignInFormProps) {
         loading={loading}
         disabled={signInButtonDisabled}
       />
-
-      <Snackbar
-        visible={snackbar.length > 0}
-        onDismiss={() => setSnackbar('')}
-        action={{
-          label: 'Dismiss',
-          onPress: () => setSnackbar(''),
-        }}
-        accessibilityStates>
-        {snackbar}
-      </Snackbar>
     </View>
   );
 }
