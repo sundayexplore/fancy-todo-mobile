@@ -6,11 +6,3 @@ export { default as SignUpForm } from "./user-components/SignUpForm";
 export { default as TodoList } from "./todo-components/TodoList";
 export { default as TodoLeftMenu } from "./todo-components/TodoLeftMenu";
 export {default as AddTodoModal} from "./todo-components/AddTodoModal";
-
-// COMPONENT TYPE DEFINITIONS
-export interface Props {
-  navigation?: any;
-  route?: any;
-  todo?: any;
-  style?: any;
-}

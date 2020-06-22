@@ -48,7 +48,7 @@ export default function SignInScreen({
               mode="text"
               accessibilityStates
               onPress={() => navigation.navigate('SignUp')}>
-              Sign In
+              Sign Up
             </Button>
           </View>
         </KeyboardAvoidingView>

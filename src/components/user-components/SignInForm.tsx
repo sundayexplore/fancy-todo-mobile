@@ -86,8 +86,7 @@ export default function SignInForm({}: ISignInFormProps) {
         const { data } = await userAPI(netInfo.details.ipAddress!).post(
           '/signin',
           {
-            userIdentifier,
-            password,
+            ...signInData
           },
         );
         // await AsyncStorage.setItem('token', data.token);
@@ -95,7 +94,6 @@ export default function SignInForm({}: ISignInFormProps) {
         setLoading(false);
       } catch (err) {
         setSnackbar(err.response.data.message);
-        console.log(err.response.data.message);
         setLoading(false);
       }
     } else {
