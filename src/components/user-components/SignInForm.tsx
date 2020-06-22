@@ -3,17 +3,16 @@ import {
   StyleSheet,
   AsyncStorage,
   View,
-  TouchableWithoutFeedback,
-  Keyboard,
   TextInput as TextInputType,
 } from 'react-native';
 import { Button } from 'react-native-elements';
-import { TextInput, HelperText, Snackbar, Paragraph } from 'react-native-paper';
+import { TextInput, HelperText, Snackbar } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from 'react-native-responsive-screen';
+import { useNetInfo, NetInfoWifiState } from '@react-native-community/netinfo';
 
 import { ISignIn, ISignInValidation } from '@/types';
 import { signIn } from '@/actions/user-actions';
@@ -38,6 +37,7 @@ export default function SignInForm({}: ISignInFormProps) {
   );
   const userIdentifierTextInputRef = useRef<TextInputType>(null);
   const passwordTextInputRef = useRef<TextInputType>(null);
+  const netInfo = useNetInfo() as NetInfoWifiState;
 
   useEffect(() => {
     if (Object.values(signInData).every((signInDataVal) => signInDataVal)) {
@@ -83,21 +83,19 @@ export default function SignInForm({}: ISignInFormProps) {
     if (checkErrors()) {
       try {
         const { userIdentifier, password } = signInData;
-        const { data } = await userAPI.post('/signin', {
-          userIdentifier,
-          password,
-        });
+        const { data } = await userAPI(netInfo.details.ipAddress!).post(
+          '/signin',
+          {
+            userIdentifier,
+            password,
+          },
+        );
         // await AsyncStorage.setItem('token', data.token);
         // dispatch(signIn(data));
-        console.log({
-          data
-        });
         setLoading(false);
       } catch (err) {
-        console.log({
-          Error: err.response,
-        });
-        setSnackbar(err.response.message)
+        setSnackbar(err.response.data.message);
+        console.log(err.response.data.message);
         setLoading(false);
       }
     } else {
@@ -106,69 +104,67 @@ export default function SignInForm({}: ISignInFormProps) {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <View style={styles.wrapper}>
-        <View style={styles.textInputView}>
-          <TextInput
-            ref={userIdentifierTextInputRef}
-            label="Email or Username"
-            placeholder="johndoe@email.com"
-            value={signInData.userIdentifier}
-            onChangeText={(text) => handleChangeText(text, 'userIdentifier')}
-            autoCapitalize="none"
-            autoCompleteType="email"
-            autoFocus
-            returnKeyType="next"
-            onSubmitEditing={() => handleTextInputFocus('password')}
-            blurOnSubmit={false}
-            accessibilityStates
-            mode="outlined"
-            error={signInErrors.userIdentifier}
-          />
-          <HelperText type="error" visible={signInErrors.userIdentifier}>
-            {signInErrors.userIdentifier}
-          </HelperText>
-        </View>
-
-        <View style={styles.textInputView}>
-          <TextInput
-            ref={passwordTextInputRef}
-            label="Password"
-            placeholder="Password"
-            value={signInData.password}
-            onChangeText={(text) => handleChangeText(text, 'password')}
-            secureTextEntry={true}
-            autoCapitalize="none"
-            accessibilityStates
-            mode="outlined"
-            error={signInErrors.password}
-          />
-          <HelperText type="error" visible={signInErrors.password}>
-            {signInErrors.password}
-          </HelperText>
-        </View>
-
-        <Button
-          title="Sign In"
-          containerStyle={styles.button}
-          titleStyle={styles.buttonTitle}
-          onPress={handleSignIn}
-          loading={loading}
-          disabled={signInButtonDisabled}
+    <View style={styles.wrapper}>
+      <View style={styles.textInputView}>
+        <TextInput
+          ref={userIdentifierTextInputRef}
+          label="Email or Username"
+          placeholder="johndoe@email.com"
+          value={signInData.userIdentifier}
+          onChangeText={(text) => handleChangeText(text, 'userIdentifier')}
+          autoCapitalize="none"
+          autoCompleteType="email"
+          autoFocus
+          returnKeyType="next"
+          onSubmitEditing={() => handleTextInputFocus('password')}
+          blurOnSubmit={false}
+          accessibilityStates
+          mode="outlined"
+          error={signInErrors.userIdentifier}
         />
-
-        <Snackbar
-          visible={Boolean(snackbar)}
-          onDismiss={() => setSnackbar('')}
-          action={{
-            label: 'Dismiss',
-            onPress: () => setSnackbar(''),
-          }}
-          accessibilityStates>
-          <Paragraph>{snackbar}</Paragraph>
-        </Snackbar>
+        <HelperText type="error" visible={signInErrors.userIdentifier}>
+          {signInErrors.userIdentifier}
+        </HelperText>
       </View>
-    </TouchableWithoutFeedback>
+
+      <View style={styles.textInputView}>
+        <TextInput
+          ref={passwordTextInputRef}
+          label="Password"
+          placeholder="Password"
+          value={signInData.password}
+          onChangeText={(text) => handleChangeText(text, 'password')}
+          secureTextEntry={true}
+          autoCapitalize="none"
+          accessibilityStates
+          mode="outlined"
+          error={signInErrors.password}
+        />
+        <HelperText type="error" visible={signInErrors.password}>
+          {signInErrors.password}
+        </HelperText>
+      </View>
+
+      <Button
+        title="Sign In"
+        containerStyle={styles.button}
+        titleStyle={styles.buttonTitle}
+        onPress={handleSignIn}
+        loading={loading}
+        disabled={signInButtonDisabled}
+      />
+
+      <Snackbar
+        visible={snackbar.length > 0}
+        onDismiss={() => setSnackbar('')}
+        action={{
+          label: 'Dismiss',
+          onPress: () => setSnackbar(''),
+        }}
+        accessibilityStates>
+        {snackbar}
+      </Snackbar>
+    </View>
   );
 }
 
@@ -178,7 +174,7 @@ const styles = StyleSheet.create({
     marginVertical: hp('1%'),
   },
   button: {
-    marginTop: hp('3%'),
+    marginTop: hp('1.5%'),
   },
   buttonTitle: {
     textTransform: 'uppercase',

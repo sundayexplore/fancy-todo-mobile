@@ -1,5 +1,10 @@
-import axios from 'axios';
+import axios, { AxiosInstance } from 'axios';
 
 import decideApiURL from './decide-api-url';
 
-export default axios.create({ baseURL: decideApiURL('users', 1) });
+export default function userAPI(host: string = 'localhost'): AxiosInstance {
+  return axios.create({
+    baseURL: decideApiURL(host, 'users', 1),
+    withCredentials: true,
+  });
+}

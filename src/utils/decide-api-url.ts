@@ -1,34 +1,23 @@
 import Config from 'react-native-config';
-import NetInfo, { NetInfoWifiState } from '@react-native-community/netinfo';
 
 export default function decideApiURL(
+  host: string = 'localhost',
   baseEnpoint: string = '',
   apiVersion: number = 1,
   port: string | number = 3000,
 ): string {
-  let localhost: string | any;
+  let apiURL: string = `https://api.todo.sundayexplore.tech/v${apiVersion}/${baseEnpoint}`;
 
-  console.log(`Localhost Before\t ${localhost}`);
+  const nonProductionApiURL = `http://${host}:${port}/v${apiVersion}/${baseEnpoint}`;
 
-  NetInfo.fetch().then((netInfoState) => {
-    const { details } = netInfoState as NetInfoWifiState;
-    localhost = details.ipAddress;
-  });
-
-  console.log(`Localhost After\t ${localhost}`);
-
-  const defaultAPI = `http://${localhost}:${port}/v${apiVersion}/${baseEnpoint}`;
   switch (Config.NODE_ENV || process.env.NODE_ENV) {
     case 'development':
-      return defaultAPI;
+      return nonProductionApiURL;
 
     case 'test':
-      return defaultAPI;
+      return nonProductionApiURL;
 
     default:
-      return `https://api.todo.sundayexplore.tech/v${apiVersion}/${baseEnpoint}`;
+      return apiURL;
   }
 }
-
-console.log(decideApiURL('users', 1));
-

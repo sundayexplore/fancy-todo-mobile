@@ -87,3 +87,7 @@ export type RootStackParamList = {
   SignUp: undefined;
   SignIn: undefined;
 };
+
+/**
+ * Utility Types and Interfaces
+ */
