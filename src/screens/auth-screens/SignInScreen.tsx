@@ -1,15 +1,15 @@
 import React from 'react';
 import {
   View,
-  KeyboardAvoidingView,
   Platform,
   Keyboard,
   TouchableWithoutFeedback,
   StyleSheet,
 } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Paragraph, Button } from 'react-native-paper';
+import { Paragraph, Button, Title, Subheading } from 'react-native-paper';
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
@@ -17,7 +17,6 @@ import {
 
 import { RootStackParamList } from '@/types';
 import { SignInForm } from '@/components';
-import { globalStyles } from '@/styles';
 
 export type SignInScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -37,9 +36,14 @@ export default function SignInScreen({
 }: ISignInScreenProps) {
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <View style={globalStyles.defaultContainer}>
-        <KeyboardAvoidingView
-          behavior={Platform.OS == 'ios' ? 'padding' : 'height'}>
+      <KeyboardAwareScrollView style={{ backgroundColor: '#fff' }}>
+        <View style={styles.wrapper}>
+          <View style={styles.titleView}>
+            <Title style={styles.title}>Welcome back!</Title>
+            <Subheading style={styles.subTitle}>
+              Glad to see you again.
+            </Subheading>
+          </View>
           <SignInForm />
           <View style={styles.suggestionView}>
             <Paragraph>Don't have an account?</Paragraph>
@@ -51,8 +55,8 @@ export default function SignInScreen({
               Sign Up
             </Button>
           </View>
-        </KeyboardAvoidingView>
-      </View>
+        </View>
+      </KeyboardAwareScrollView>
     </TouchableWithoutFeedback>
   );
 }
@@ -67,4 +71,17 @@ const styles = StyleSheet.create({
   suggestionButton: {
     marginLeft: wp('2%'),
   },
+  titleView: {
+    paddingBottom: hp('3%'),
+  },
+  title: {
+    fontSize: hp('4%'),
+  },
+  subTitle: {},
+  wrapper: {
+    alignItems: 'center',
+    flex: 1,
+    paddingTop: hp('8%'),
+    paddingBottom: hp('4%'),
+  }
 });

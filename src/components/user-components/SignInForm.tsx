@@ -22,6 +22,7 @@ export interface ISignInFormProps {}
 
 export default function SignInForm({}: ISignInFormProps) {
   const dispatch = useDispatch();
+  const netInfo = useNetInfo() as NetInfoWifiState;
   const [signInData, setSignInData] = useState<ISignIn>({
     userIdentifier: '',
     password: '',
@@ -35,9 +36,9 @@ export default function SignInForm({}: ISignInFormProps) {
   const [signInButtonDisabled, setSignInButtonDisabled] = useState<boolean>(
     true,
   );
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   const userIdentifierTextInputRef = useRef<TextInputType>(null);
   const passwordTextInputRef = useRef<TextInputType>(null);
-  const netInfo = useNetInfo() as NetInfoWifiState;
 
   useEffect(() => {
     if (Object.values(signInData).every((signInDataVal) => signInDataVal)) {
@@ -141,6 +142,7 @@ export default function SignInForm({}: ISignInFormProps) {
           blurOnSubmit={false}
           accessibilityStates
           error={signInErrors.userIdentifier}
+          style={styles.textInput}
         />
         <HelperText type="error" visible={signInErrors.userIdentifier}>
           {signInErrors.userIdentifier}
@@ -154,10 +156,11 @@ export default function SignInForm({}: ISignInFormProps) {
           placeholder="Password"
           value={signInData.password}
           onChangeText={(text) => handleChangeText(text, 'password')}
-          secureTextEntry={true}
+          secureTextEntry={!showPassword}
           autoCapitalize="none"
           accessibilityStates
           error={signInErrors.password}
+          style={styles.textInput}
         />
         <HelperText type="error" visible={signInErrors.password}>
           {signInErrors.password}
@@ -189,11 +192,13 @@ export default function SignInForm({}: ISignInFormProps) {
 
 const styles = StyleSheet.create({
   textInputView: {
-    width: wp('80%'),
-    marginVertical: hp('1%'),
+    width: wp('88%')
+  },
+  textInput: {
+    backgroundColor: 'transparent'
   },
   button: {
-    marginTop: hp('1.5%'),
+    marginTop: hp('5%'),
   },
   buttonTitle: {
     textTransform: 'uppercase',

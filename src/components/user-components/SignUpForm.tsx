@@ -41,6 +41,7 @@ export default ({}: ISignUpFormProps) => {
   const [signUpButtonDisabled, setSignUpButtonDisabled] = useState<boolean>(
     true,
   );
+  const [showPassword, setShowPassword] = useState<boolean>(false);
   const firstNameRef = useRef<TextInputType>(null);
   const lastNameRef = useRef<TextInputType>(null);
   const usernameRef = useRef<TextInputType>(null);
@@ -144,13 +145,12 @@ export default ({}: ISignUpFormProps) => {
 
   return (
     <View style={styles.wrapper}>
-      <View style={styles.textFieldView}>
+      <View style={styles.textInputView}>
         <TextInput
           label="First Name"
           error={signUpErrors.firstName.length > 0}
           onChangeText={(text) => handleChangeText(text, 'firstName')}
           value={signUpData.firstName}
-          mode="outlined"
           autoCompleteType="name"
           autoFocus={true}
           returnKeyType="next"
@@ -159,80 +159,81 @@ export default ({}: ISignUpFormProps) => {
           onSubmitEditing={() => handleInputFocus('lastName')}
           accessibilityStates
           blurOnSubmit={false}
+          style={styles.textInput}
         />
         <HelperText type="error" visible={signUpErrors.firstName}>
           {signUpErrors.firstName}
         </HelperText>
       </View>
 
-      <View style={styles.textFieldView}>
+      <View style={styles.textInputView}>
         <TextInput
           accessibilityStates
           label="Last Name"
           onChangeText={(text) => handleChangeText(text, 'lastName')}
           value={signUpData.lastName}
-          mode="outlined"
           autoCompleteType="name"
           returnKeyType="next"
           ref={lastNameRef}
           onSubmitEditing={() => handleInputFocus('username')}
           placeholder="Doe"
           blurOnSubmit={false}
+          style={styles.textInput}
         />
         <HelperText></HelperText>
       </View>
 
-      <View style={styles.textFieldView}>
+      <View style={styles.textInputView}>
         <TextInput
           accessibilityStates
           label="Username"
           error={signUpErrors.username.length > 0}
           onChangeText={(text) => handleChangeText(text, 'username')}
           value={signUpData.username}
-          mode="outlined"
           autoCapitalize="none"
           autoCompleteType="username"
           returnKeyType="next"
           ref={usernameRef}
           onSubmitEditing={() => handleInputFocus('email')}
           blurOnSubmit={false}
+          style={styles.textInput}
         />
         <HelperText type="error" visible={signUpErrors.username}>
           {signUpErrors.username}
         </HelperText>
       </View>
 
-      <View style={styles.textFieldView}>
+      <View style={styles.textInputView}>
         <TextInput
           accessibilityStates
           label="Email"
           error={signUpErrors.email.length > 0}
           onChangeText={(text) => handleChangeText(text, 'email')}
           value={signUpData.email}
-          mode="outlined"
           autoCapitalize="none"
           autoCompleteType="email"
           returnKeyType="next"
           ref={emailRef}
           onSubmitEditing={() => handleInputFocus('password')}
           blurOnSubmit={false}
+          style={styles.textInput}
         />
         <HelperText type="error" visible={signUpErrors.email}>
           {signUpErrors.email}
         </HelperText>
       </View>
 
-      <View style={styles.textFieldView}>
+      <View style={styles.textInputView}>
         <TextInput
           accessibilityStates
           label="Password"
           error={signUpErrors.password.length}
           onChangeText={(text) => handleChangeText(text, 'password')}
           value={signUpData.password}
-          mode="outlined"
-          secureTextEntry={true}
+          secureTextEntry={!showPassword}
           autoCapitalize="none"
           ref={passwordRef}
+          style={styles.textInput}
         />
         <HelperText type="error" visible={signUpErrors.password}>
           {signUpErrors.password}
@@ -240,7 +241,7 @@ export default ({}: ISignUpFormProps) => {
       </View>
 
       <Button
-        style={styles.button}
+        containerStyle={styles.button}
         titleStyle={styles.buttonTitle}
         onPress={handleSignUp}
         loading={loading}
@@ -263,18 +264,20 @@ export default ({}: ISignUpFormProps) => {
 };
 
 const styles = StyleSheet.create({
-  textFieldView: {
-    width: wp('80%'),
-    marginVertical: hp('1%'),
+  textInputView: {
+    width: wp('88%'),
+  },
+  textInput: {
+    backgroundColor: 'transparent',
+  },
+  button: {
+    marginTop: hp('5%'),
+  },
+  buttonTitle: {
+    textTransform: 'uppercase',
   },
   wrapper: {
     backgroundColor: '#fff',
     justifyContent: 'center',
-  },
-  button: {
-    marginTop: hp('1.5%'),
-  },
-  buttonTitle: {
-    textTransform: 'uppercase',
   },
 });
