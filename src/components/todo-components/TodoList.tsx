@@ -72,7 +72,7 @@ export default (props: any) => {
   };
 
   const renderTodos = () => {
-    return <View style={styles.container}></View>;
+    return <View style={styles.container} />;
   };
 
   return (

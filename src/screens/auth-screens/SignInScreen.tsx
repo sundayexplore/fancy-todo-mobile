@@ -6,7 +6,7 @@ import {
   StyleSheet,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { RouteProp } from '@react-navigation/native';
+// import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import {
   Paragraph,
@@ -28,23 +28,23 @@ export type SignInScreenNavigationProp = StackNavigationProp<
   'SignIn'
 >;
 
-export type SignInScreenRouteProp = RouteProp<RootStackParamList, 'SignIn'>;
+// export type SignInScreenRouteProp = RouteProp<RootStackParamList, 'SignIn'>;
 
 export interface ISignInScreenProps {
   navigation: SignInScreenNavigationProp;
-  route: SignInScreenRouteProp;
+  // route: SignInScreenRouteProp;
 }
 
 export default function SignInScreen({
   navigation,
-  route,
-}: ISignInScreenProps) {
+}: // route,
+ISignInScreenProps) {
   const [snackbar, setSnackbar] = useState<string>('');
 
   return (
     <>
       <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-        <KeyboardAwareScrollView style={{ backgroundColor: '#fff' }}>
+        <KeyboardAwareScrollView style={styles.scrollView}>
           <View style={styles.wrapper}>
             <View style={styles.titleView}>
               <Title style={styles.title}>Welcome back!</Title>
@@ -52,7 +52,7 @@ export default function SignInScreen({
                 Glad to see you again.
               </Subheading>
             </View>
-            <SignInForm snackbar={snackbar} setSnackbar={setSnackbar} />
+            <SignInForm setSnackbar={setSnackbar} />
             <View style={styles.suggestionView}>
               <Paragraph>Don't have an account?</Paragraph>
               <Button
@@ -102,5 +102,8 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: hp('8%'),
     paddingBottom: hp('4%'),
+  },
+  scrollView: {
+    backgroundColor: '#fff',
   },
 });

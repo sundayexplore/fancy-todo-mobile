@@ -1,12 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
-import {
-  View,
-  AsyncStorage,
-  StyleSheet,
-  TextInput as TextInputType,
-} from 'react-native';
+import { View, StyleSheet, TextInput as TextInputType } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import { useDispatch } from 'react-redux';
-import { TextInput, Snackbar, HelperText } from 'react-native-paper';
+import { TextInput, HelperText } from 'react-native-paper';
 import { Button } from 'react-native-elements';
 import {
   widthPercentageToDP as wp,
@@ -18,9 +14,11 @@ import { ISignUp, ISignUpValidation } from '@/types';
 import { signIn } from '@/actions/user-actions';
 import { userAPI, CustomValidator } from '@/utils';
 
-export interface ISignUpFormProps {}
+export interface ISignUpFormProps {
+  setSnackbar: (message: string) => void;
+}
 
-export default ({}: ISignUpFormProps) => {
+export default ({ setSnackbar }: ISignUpFormProps) => {
   const dispatch = useDispatch();
   const netInfo = useNetInfo() as NetInfoWifiState;
   const [signUpData, setSignUpData] = useState<ISignUp>({
@@ -37,11 +35,10 @@ export default ({}: ISignUpFormProps) => {
     password: '',
   });
   const [loading, setLoading] = useState<boolean>(false);
-  const [snackbar, setSnackbar] = useState<string>('');
   const [signUpButtonDisabled, setSignUpButtonDisabled] = useState<boolean>(
     true,
   );
-  const [showPassword, setShowPassword] = useState<boolean>(false);
+  // const [showPassword, setShowPassword] = useState<boolean>(false);
   const firstNameRef = useRef<TextInputType>(null);
   const lastNameRef = useRef<TextInputType>(null);
   const usernameRef = useRef<TextInputType>(null);
@@ -98,7 +95,7 @@ export default ({}: ISignUpFormProps) => {
 
     setSignUpErrors(errorMessages);
 
-    return Object.values(errorMessages).every((errorMessage) => !errorMessages);
+    return Object.values(errorMessages).every((errorMessage) => !errorMessage);
   };
 
   const handleSignUp = async () => {
@@ -180,7 +177,7 @@ export default ({}: ISignUpFormProps) => {
           blurOnSubmit={false}
           style={styles.textInput}
         />
-        <HelperText></HelperText>
+        <HelperText />
       </View>
 
       <View style={styles.textInputView}>
@@ -230,7 +227,7 @@ export default ({}: ISignUpFormProps) => {
           error={signUpErrors.password.length}
           onChangeText={(text) => handleChangeText(text, 'password')}
           value={signUpData.password}
-          secureTextEntry={!showPassword}
+          secureTextEntry={true /*!showPassword*/}
           autoCapitalize="none"
           ref={passwordRef}
           style={styles.textInput}
@@ -248,17 +245,6 @@ export default ({}: ISignUpFormProps) => {
         title="Sign Up"
         disabled={signUpButtonDisabled}
       />
-
-      <Snackbar
-        visible={snackbar.length > 0}
-        onDismiss={() => setSnackbar('')}
-        action={{
-          label: 'Dismiss',
-          onPress: () => setSnackbar(''),
-        }}
-        accessibilityStates>
-        {snackbar}
-      </Snackbar>
     </View>
   );
 };

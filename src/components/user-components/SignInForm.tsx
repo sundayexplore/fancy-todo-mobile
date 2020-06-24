@@ -1,10 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import {
-  StyleSheet,
-  AsyncStorage,
-  View,
-  TextInput as TextInputType,
-} from 'react-native';
+import { StyleSheet, View, TextInput as TextInputType } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import { Button } from 'react-native-elements';
 import { TextInput, HelperText } from 'react-native-paper';
 import { useDispatch } from 'react-redux';
@@ -19,11 +15,10 @@ import { signIn } from '@/actions/user-actions';
 import { userAPI, CustomValidator } from '@/utils';
 
 export interface ISignInFormProps {
-  snackbar: string;
   setSnackbar: (message: string) => void;
 }
 
-export default function SignInForm({ snackbar, setSnackbar }: ISignInFormProps) {
+export default function SignInForm({ setSnackbar }: ISignInFormProps) {
   const dispatch = useDispatch();
   const netInfo = useNetInfo() as NetInfoWifiState;
   const [signInData, setSignInData] = useState<ISignIn>({
@@ -38,7 +33,7 @@ export default function SignInForm({ snackbar, setSnackbar }: ISignInFormProps) 
   const [signInButtonDisabled, setSignInButtonDisabled] = useState<boolean>(
     true,
   );
-  const [showPassword, setShowPassword] = useState<boolean>(false);
+  // const [showPassword, setShowPassword] = useState<boolean>(false);
   const userIdentifierTextInputRef = useRef<TextInputType>(null);
   const passwordTextInputRef = useRef<TextInputType>(null);
 
@@ -119,8 +114,6 @@ export default function SignInForm({ snackbar, setSnackbar }: ISignInFormProps) 
         }
 
         setLoading(false);
-
-        setLoading(false);
       }
     } else {
       setLoading(false);
@@ -158,7 +151,7 @@ export default function SignInForm({ snackbar, setSnackbar }: ISignInFormProps) 
           placeholder="Password"
           value={signInData.password}
           onChangeText={(text) => handleChangeText(text, 'password')}
-          secureTextEntry={!showPassword}
+          secureTextEntry={true /* !showPassword */}
           autoCapitalize="none"
           accessibilityStates
           error={signInErrors.password}
@@ -183,10 +176,10 @@ export default function SignInForm({ snackbar, setSnackbar }: ISignInFormProps) 
 
 const styles = StyleSheet.create({
   textInputView: {
-    width: wp('88%')
+    width: wp('88%'),
   },
   textInput: {
-    backgroundColor: 'transparent'
+    backgroundColor: 'transparent',
   },
   button: {
     marginTop: hp('5%'),

@@ -10,15 +10,14 @@ import HomeScreen from './HomeScreen';
 const Stack = createStackNavigator();
 
 export default () => {
-  const signedIn = useSelector((state: IRootState) => state.user.signedIn);
+  const currentUser = useSelector(
+    (state: IRootState) => state.user.currentUser,
+  );
 
   return (
     <Stack.Navigator>
-      {signedIn ? (
-        <Stack.Screen
-          name="Home"
-          component={HomeScreen}
-        />
+      {Object.values(currentUser).length ? (
+        <Stack.Screen name="Home" component={HomeScreen} />
       ) : (
         <>
           <Stack.Screen
@@ -27,7 +26,7 @@ export default () => {
             options={{
               title: 'Sign In',
               animationTypeForReplace: 'pop',
-              headerShown: false
+              headerShown: false,
             }}
           />
           <Stack.Screen
@@ -36,7 +35,7 @@ export default () => {
             options={{
               title: 'Sign Up',
               animationTypeForReplace: 'pop',
-              headerShown: false
+              headerShown: false,
             }}
           />
         </>

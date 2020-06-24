@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   TouchableWithoutFeedback,
@@ -6,9 +6,15 @@ import {
   StyleSheet,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { RouteProp } from '@react-navigation/native';
+// import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { Button, Paragraph, Title, Subheading } from 'react-native-paper';
+import {
+  Button,
+  Paragraph,
+  Title,
+  Subheading,
+  Snackbar,
+} from 'react-native-paper';
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -22,38 +28,52 @@ export type SignUpScreenNavigationProp = StackNavigationProp<
   'SignUp'
 >;
 
-export type SignUpScreenRouteProp = RouteProp<RootStackParamList, 'SignUp'>;
+// export type SignUpScreenRouteProp = RouteProp<RootStackParamList, 'SignUp'>;
 
 export interface ISignUpScreenProps {
   navigation: SignUpScreenNavigationProp;
-  route: SignUpScreenRouteProp;
+  // route: SignUpScreenRouteProp;
 }
 
-export default ({ navigation, route }: ISignUpScreenProps) => {
+export default ({ navigation /*route*/ }: ISignUpScreenProps) => {
+  const [snackbar, setSnackbar] = useState('');
+
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <KeyboardAwareScrollView style={{ backgroundColor: '#fff' }}>
-        <View style={styles.wrapper}>
-          <View style={styles.titleView}>
-            <Title style={styles.title}>
-              Create a new account.
-            </Title>
-            <Subheading style={styles.subTitle}>It's always been free.</Subheading>
+    <>
+      <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+        <KeyboardAwareScrollView style={styles.scrollView}>
+          <View style={styles.wrapper}>
+            <View style={styles.titleView}>
+              <Title style={styles.title}>Create a new account.</Title>
+              <Subheading style={styles.subTitle}>
+                It's always been free.
+              </Subheading>
+            </View>
+            <SignUpForm setSnackbar={setSnackbar} />
+            <View style={styles.suggestionView}>
+              <Paragraph>Already have an account?</Paragraph>
+              <Button
+                style={styles.suggestionButton}
+                mode="text"
+                accessibilityStates
+                onPress={() => navigation.navigate('SignIn')}>
+                Sign In
+              </Button>
+            </View>
           </View>
-          <SignUpForm />
-          <View style={styles.suggestionView}>
-            <Paragraph>Already have an account?</Paragraph>
-            <Button
-              style={styles.suggestionButton}
-              mode="text"
-              accessibilityStates
-              onPress={() => navigation.navigate('SignIn')}>
-              Sign In
-            </Button>
-          </View>
-        </View>
-      </KeyboardAwareScrollView>
-    </TouchableWithoutFeedback>
+        </KeyboardAwareScrollView>
+      </TouchableWithoutFeedback>
+      <Snackbar
+        visible={snackbar.length > 0}
+        onDismiss={() => setSnackbar('')}
+        action={{
+          label: 'Dismiss',
+          onPress: () => setSnackbar(''),
+        }}
+        accessibilityStates>
+        {snackbar}
+      </Snackbar>
+    </>
   );
 };
 
@@ -74,10 +94,13 @@ const styles = StyleSheet.create({
     paddingBottom: hp('4%'),
   },
   titleView: {
-    paddingBottom: hp('3%')
+    paddingBottom: hp('3%'),
   },
   title: {
-    fontSize: hp('4%')
+    fontSize: hp('4%'),
   },
-  subTitle: {}
+  subTitle: {},
+  scrollView: {
+    backgroundColor: '#fff',
+  },
 });

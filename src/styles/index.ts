@@ -1,20 +1,20 @@
 import { StyleSheet } from 'react-native';
 import { DefaultTheme, Theme } from 'react-native-paper';
 
-export const globalStyles =  StyleSheet.create({
+export const globalStyles = StyleSheet.create({
   centerOnly: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    alignContent: 'center'
+    alignContent: 'center',
   },
   defaultContainer: {
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
-    alignContent: 'center'
-  }
+    alignContent: 'center',
+  },
 });
 
 export const paperTheme: Theme = {
@@ -22,6 +22,6 @@ export const paperTheme: Theme = {
   roundness: 2,
   colors: {
     ...DefaultTheme.colors,
-    primary: '#2089dc'
-  }
+    primary: '#2089dc',
+  },
 };

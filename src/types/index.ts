@@ -69,7 +69,14 @@ export interface IAction {
 
 export interface IUserReducer {
   currentUser: IUser;
-  signedIn: boolean;
+  apiKey: string;
+  tokens: ITokens;
+}
+
+export interface ITokens {
+  act: string;
+  rft: string;
+  _csrf?: string;
 }
 
 export interface ITodoReducer {

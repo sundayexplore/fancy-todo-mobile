@@ -1,8 +1,8 @@
 import { IUser } from '@/types';
 
 export const signIn = (user: IUser) => ({
-  type: "SIGN_IN",
+  type: 'SIGN_IN',
   payload: {
-    user
-  }
+    user,
+  },
 });
