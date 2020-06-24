@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Appbar, Searchbar } from 'react-native-paper';
+import { Appbar, TextInput } from 'react-native-paper';
+
+import { staticColors } from '@/styles';
 
 export interface TodoTabHeaderProps {}
 
@@ -14,8 +16,9 @@ export default function TodoTabHeader({}: TodoTabHeaderProps) {
           <Appbar.BackAction
             accessibilityStates
             onPress={() => setSearchActive(false)}
+            color={staticColors.white}
           />
-          <Searchbar
+          <TextInput
             accessibilityStates
             placeholder="Search Todo"
             onChangeText={(text) => setSearchQuery(text)}
@@ -29,8 +32,13 @@ export default function TodoTabHeader({}: TodoTabHeaderProps) {
             accessibilityStates
             icon="magnify"
             onPress={() => setSearchActive(true)}
+            color={staticColors.white}
           />
-          <Appbar.Action accessibilityStates icon="plus" />
+          <Appbar.Action
+            accessibilityStates
+            icon="plus"
+            color={staticColors.white}
+          />
         </>
       )}
     </Appbar.Header>

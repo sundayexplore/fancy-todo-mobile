@@ -28,4 +28,5 @@ export const paperTheme: Theme = {
 
 export const staticColors = {
   primary: '#2089dc',
+  white: '#fff',
 };
