@@ -5,6 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useSelector } from 'react-redux';
 
 import { RootStackParamList, IRootState } from '@/types';
+import { staticColors } from '@/styles';
 import { IconWithBadge } from '@/components';
 import TodoTabScreen from './tab-screens/TodoTabScreen';
 import ProfileTabScreen from './tab-screens/ProfileTabScreen';
@@ -53,7 +54,10 @@ export default function HomeScreen({}: /*navigation, route*/ IHomeScreenProps) {
             />
           );
         },
-      })}>
+      })}
+      tabBarOptions={{
+        activeTintColor: staticColors.primary,
+      }}>
       <Tab.Screen
         name="Todo"
         options={{ tabBarLabel: 'Todo' }}

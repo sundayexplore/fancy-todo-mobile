@@ -20,7 +20,9 @@ export default function IconWithBadge({
       <MaterialIcon name={name} size={size} color={color} />
       {badgeCount > 0 && (
         <View style={styles.badgeCountView}>
-          <Text style={styles.badgeCountText}>{badgeCount}</Text>
+          <Text style={styles.badgeCountText}>
+            {badgeCount > 10 ? '10+' : badgeCount}
+          </Text>
         </View>
       )}
     </View>
@@ -35,18 +37,20 @@ const styles = StyleSheet.create({
   },
   badgeCountView: {
     position: 'absolute',
-    right: -6,
-    top: -3,
+    right: -12,
+    top: -9,
     backgroundColor: 'red',
-    borderRadius: 6,
-    width: 12,
-    height: 12,
+    borderRadius: 12,
+    width: 24,
+    height: 24,
     justifyContent: 'center',
     alignItems: 'center',
   },
   badgeCountText: {
     color: '#fff',
-    fontSize: 10,
+    fontSize: 12,
+    textAlign: 'center',
+    textAlignVertical: 'center',
     fontWeight: 'bold',
   },
 });

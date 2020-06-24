@@ -25,3 +25,7 @@ export const paperTheme: Theme = {
     primary: '#2089dc',
   },
 };
+
+export const staticColors = {
+  primary: '#2089dc',
+};
