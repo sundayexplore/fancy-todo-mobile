@@ -1,18 +1,36 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
+import React, { useCallback, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { createStackNavigator } from '@react-navigation/stack';
+import AsyncStorage from '@react-native-community/async-storage';
 
-import { IRootState } from '@/types';
+import { IRootState, IUser } from '@/types';
+import { signIn } from '@/actions/user-actions';
 import SignInScreen from './auth-screens/SignInScreen';
 import SignUpScreen from './auth-screens/SignUpScreen';
 import HomeScreen from './HomeScreen';
 
 const Stack = createStackNavigator();
 
-export default () => {
+export interface MainScreenProps {}
+
+export default function MainScreen({}: MainScreenProps) {
+  const dispatch = useDispatch();
   const currentUser = useSelector(
     (state: IRootState) => state.user.currentUser,
   );
+
+  const _getCurrentUser = useCallback(async () => {
+    const currentUserFromAsyncStorage: IUser | any = await AsyncStorage.getItem(
+      'currentUser',
+    );
+    if (currentUserFromAsyncStorage) {
+      dispatch(signIn(JSON.parse(currentUserFromAsyncStorage)));
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    _getCurrentUser();
+  }, [_getCurrentUser]);
 
   return (
     <Stack.Navigator>
@@ -48,4 +66,4 @@ export default () => {
       )}
     </Stack.Navigator>
   );
-};
+}

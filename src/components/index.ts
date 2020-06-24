@@ -8,3 +8,6 @@ export { default as TodoList } from './todo-components/TodoList';
 export { default as TodoLeftMenu } from './todo-components/TodoLeftMenu';
 export { default as AddTodoModal } from './todo-components/AddTodoModal';
 export { default as TodoTabHeader } from './todo-components/TodoTabHeader';
+
+// GENERAL COMPONENTS
+export { default as IconWithBadge } from './IconWithBadge';

@@ -81,6 +81,7 @@ export interface ITokens {
 
 export interface ITodoReducer {
   todos: ITodo[];
+  todosToday: ITodo[];
 }
 
 /**

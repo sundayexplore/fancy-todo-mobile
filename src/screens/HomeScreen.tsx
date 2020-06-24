@@ -2,8 +2,10 @@ import React from 'react';
 import { RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { useSelector } from 'react-redux';
 
-import { RootStackParamList } from '@/types';
+import { RootStackParamList, IRootState } from '@/types';
+import { IconWithBadge } from '@/components';
 import TodoTabScreen from './tab-screens/TodoTabScreen';
 import ProfileTabScreen from './tab-screens/ProfileTabScreen';
 
@@ -22,15 +24,43 @@ export interface IHomeScreenProps {
 }
 
 export default function HomeScreen({}: /*navigation, route*/ IHomeScreenProps) {
+  const todosToday = useSelector((state: IRootState) => state.todo.todosToday);
+
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={({ route }) => ({
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+
+          switch (route.name) {
+            case 'Todo':
+              iconName = focused
+                ? 'format-list-bulleted'
+                : 'format-list-checkbox';
+              break;
+
+            case 'Profile':
+              iconName = focused ? 'account-circle' : 'account-circle-outline';
+              break;
+          }
+
+          return (
+            <IconWithBadge
+              name={iconName}
+              size={size}
+              color={color}
+              badgeCount={todosToday.length}
+            />
+          );
+        },
+      })}>
       <Tab.Screen
-        name="todo"
+        name="Todo"
         options={{ tabBarLabel: 'Todo' }}
         component={TodoTabScreen}
       />
       <Tab.Screen
-        name="profile"
+        name="Profile"
         options={{
           tabBarLabel: 'Profile',
         }}

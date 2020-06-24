@@ -1,2 +1,2 @@
-export { default as userReducer } from './userReducer';
-export { default as todoReducer } from './todoReducer';
+export { default as userReducer } from './user-reducer';
+export { default as todoReducer } from './todo-reducer';

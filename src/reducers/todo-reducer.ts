@@ -1,10 +1,11 @@
-import { Action } from '.';
+import { IAction, ITodoReducer } from '@/types';
 
-const initialState = {
+const initialState: ITodoReducer = {
   todos: [],
+  todosToday: [],
 };
 
-export default (state = initialState, action: Action) => {
+export default (state = initialState, action: IAction) => {
   switch (action.type) {
     case 'ADD_TODO':
       return {
@@ -25,7 +26,7 @@ export default (state = initialState, action: Action) => {
 
     case 'DELETE_TODO':
       const deletedTodos: any = state.todos.filter(
-        (todo: any) => todo.id != action.payload.todoData._id,
+        (todo: any) => todo.id !== action.payload.todoData._id,
       );
       return {
         ...state,

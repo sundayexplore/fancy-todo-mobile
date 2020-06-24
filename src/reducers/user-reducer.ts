@@ -1,12 +1,15 @@
-import { Action } from '.';
+import { IAction, IUserReducer, IUser } from '@/types';
 
-const initialState = {
-  isSignedIn: false,
-  currentUser: null,
-  token: null,
+const initialState: IUserReducer = {
+  currentUser: {} as IUser,
+  apiKey: '',
+  tokens: {
+    act: '',
+    rft: '',
+  },
 };
 
-export default (state = initialState, action: Action) => {
+export default (state = initialState, action: IAction) => {
   switch (action.type) {
     case 'SIGN_IN':
       return {
