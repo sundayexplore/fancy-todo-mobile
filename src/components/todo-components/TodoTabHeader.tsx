@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
+import { StyleSheet } from 'react-native';
 import { Appbar, TextInput } from 'react-native-paper';
+import {
+  // heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from 'react-native-responsive-screen';
 
 import { staticColors } from '@/styles';
 
@@ -10,7 +15,7 @@ export default function TodoTabHeader({}: TodoTabHeaderProps) {
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   return (
-    <Appbar.Header accessibilityStates>
+    <Appbar.Header accessibilityStates style={{ paddingVertical: 10 }}>
       {searchActive ? (
         <>
           <Appbar.BackAction
@@ -23,6 +28,8 @@ export default function TodoTabHeader({}: TodoTabHeaderProps) {
             placeholder="Search Todo"
             onChangeText={(text) => setSearchQuery(text)}
             value={searchQuery}
+            style={styles.searchBar}
+            mode="flat"
           />
         </>
       ) : (
@@ -44,3 +51,10 @@ export default function TodoTabHeader({}: TodoTabHeaderProps) {
     </Appbar.Header>
   );
 }
+
+const styles = StyleSheet.create({
+  searchBar: {
+    width: wp('70%'),
+    // backgroundColor: 'transparent',
+  },
+});
