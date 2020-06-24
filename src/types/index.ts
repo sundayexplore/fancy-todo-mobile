@@ -95,6 +95,12 @@ export type RootStackParamList = {
   SignIn: undefined;
 };
 
+export interface CustomBottomNavigationRoute {
+  key: string;
+  title: string;
+  icon: string;
+}
+
 /**
  * Utility Types and Interfaces
  */
