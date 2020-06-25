@@ -25,7 +25,7 @@ export interface IHomeScreenProps {
 }
 
 export default function HomeScreen({}: /*navigation, route*/ IHomeScreenProps) {
-  const todosToday = useSelector((state: IRootState) => state.todo.todosToday);
+  const todayTodos = useSelector((state: IRootState) => state.todo.today);
 
   return (
     <Tab.Navigator
@@ -50,7 +50,7 @@ export default function HomeScreen({}: /*navigation, route*/ IHomeScreenProps) {
               name={iconName}
               size={size}
               color={color}
-              badgeCount={todosToday.length}
+              badgeCount={todayTodos.length}
             />
           );
         },

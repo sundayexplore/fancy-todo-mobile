@@ -52,11 +52,6 @@ export default function TodoTabHeader({
             onPress={() => setSearchActive(true)}
             color={staticColors.white}
           />
-          <Appbar.Action
-            accessibilityStates
-            icon="plus"
-            color={staticColors.white}
-          />
         </>
       )}
     </Appbar.Header>

@@ -26,10 +26,12 @@ export const paperTheme: Theme = {
   colors: {
     ...DefaultTheme.colors,
     primary: '#2089dc',
+    accent: '#f1c40f',
   },
 };
 
 export const staticColors = {
   primary: '#2089dc',
   white: '#fff',
+  accent: '#f1c40f',
 };
