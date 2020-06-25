@@ -1,14 +1,16 @@
 import React from 'react';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 
-import { TodoTabHeader, TodoList } from '@/components';
+import TodoTodayDrawerScreen from '@/screens/drawer-screens/TodoTodayDrawerScreen';
+
+const Drawer = createDrawerNavigator();
 
 export interface TodoTabScreenProps {}
 
-export default function TodoTabScreen({}: TodoListTabScreenProps) {
+export default function TodoTabScreen({}: TodoTabScreenProps) {
   return (
-    <>
-      <TodoTabHeader />
-      <TodoList />
-    </>
+    <Drawer.Navigator initialRouteName="Today">
+      <Drawer.Screen name="Today" component={TodoTodayDrawerScreen} />
+    </Drawer.Navigator>
   );
 }

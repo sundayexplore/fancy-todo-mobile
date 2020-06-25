@@ -80,8 +80,8 @@ export interface ITokens {
 }
 
 export interface ITodoReducer {
-  todos: ITodo[];
-  todosToday: ITodo[];
+  today: ITodo[];
+  upcoming: ITodo[];
 }
 
 /**
@@ -96,11 +96,9 @@ export type RootStackParamList = {
   SignIn: undefined;
 };
 
-export interface CustomBottomNavigationRoute {
-  key: string;
-  title: string;
-  icon: string;
-}
+export type TodoDrawerParamList = {
+  Today: undefined;
+};
 
 /**
  * Utility Types and Interfaces

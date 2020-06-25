@@ -1,21 +1,24 @@
 import React, { useState } from 'react';
 import { StyleSheet } from 'react-native';
-import { Appbar, TextInput } from 'react-native-paper';
-import {
-  // heightPercentageToDP as hp,
-  widthPercentageToDP as wp,
-} from 'react-native-responsive-screen';
+import { Appbar, Searchbar } from 'react-native-paper';
+import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
 import { staticColors } from '@/styles';
 
-export interface TodoTabHeaderProps {}
+export interface TodoTabHeaderProps {
+  handleDrawer: (action: 'open' | 'close') => void;
+  category: string;
+}
 
-export default function TodoTabHeader({}: TodoTabHeaderProps) {
+export default function TodoTabHeader({
+  handleDrawer,
+  category,
+}: TodoTabHeaderProps) {
   const [searchActive, setSearchActive] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   return (
-    <Appbar.Header accessibilityStates style={{ paddingVertical: 10 }}>
+    <Appbar.Header accessibilityStates>
       {searchActive ? (
         <>
           <Appbar.BackAction
@@ -23,18 +26,26 @@ export default function TodoTabHeader({}: TodoTabHeaderProps) {
             onPress={() => setSearchActive(false)}
             color={staticColors.white}
           />
-          <TextInput
+          <Searchbar
             accessibilityStates
             placeholder="Search Todo"
             onChangeText={(text) => setSearchQuery(text)}
             value={searchQuery}
             style={styles.searchBar}
-            mode="flat"
+            autoCapitalize="sentences"
+            autoFocus
+            clearTextOnFocus
           />
         </>
       ) : (
         <>
-          <Appbar.Content accessibilityStates title="Today" />
+          <Appbar.Action
+            accessibilityStates
+            icon="menu"
+            color={staticColors.white}
+            onPress={() => handleDrawer('open')}
+          />
+          <Appbar.Content accessibilityStates title={category} />
           <Appbar.Action
             accessibilityStates
             icon="magnify"
@@ -54,7 +65,6 @@ export default function TodoTabHeader({}: TodoTabHeaderProps) {
 
 const styles = StyleSheet.create({
   searchBar: {
-    width: wp('70%'),
-    // backgroundColor: 'transparent',
+    width: wp('85%'),
   },
 });

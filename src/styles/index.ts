@@ -15,6 +15,9 @@ export const globalStyles = StyleSheet.create({
     justifyContent: 'center',
     alignContent: 'center',
   },
+  noTodosView: {
+    flex: 1,
+  },
 });
 
 export const paperTheme: Theme = {

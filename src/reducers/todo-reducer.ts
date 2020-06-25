@@ -1,8 +1,9 @@
-import { IAction, ITodoReducer } from '@/types';
+import { IAction, ITodoReducer, ITodo } from '@/types';
+import { classifyTodos } from '@/utils';
 
 const initialState: ITodoReducer = {
-  todos: [],
-  todosToday: [],
+  today: [] as ITodo[],
+  upcoming: [] as ITodo[],
 };
 
 export default (state = initialState, action: IAction) => {
@@ -10,27 +11,22 @@ export default (state = initialState, action: IAction) => {
     case 'ADD_TODO':
       return {
         ...state,
-        todos: state.todos.concat(action.payload.todoData),
+        ...classifyTodos(state, action.payload.todo),
       };
 
     case 'UPDATE_TODO':
-      const updatedTodos: any = [...state.todos];
-      const updatedTodoIndex: number = updatedTodos
-        .map((todo: any) => todo._id)
-        .indexOf(action.payload.todoData._id);
-      updatedTodos[updatedTodoIndex] = action.payload.todoData;
       return {
         ...state,
-        todos: [...updatedTodos],
+        ...classifyTodos(state, action.payload.todo),
       };
 
     case 'DELETE_TODO':
-      const deletedTodos: any = state.todos.filter(
-        (todo: any) => todo.id !== action.payload.todoData._id,
-      );
+      const todosAfterDeletion: ITodo[] = Object.values(state)
+        .flat()
+        .filter((todo: ITodo) => todo._id !== action.payload.todo._id);
       return {
         ...state,
-        todos: [...deletedTodos],
+        ...classifyTodos(todosAfterDeletion),
       };
 
     default:
