@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useRef } from 'react';
 import { StyleSheet } from 'react-native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { FAB } from 'react-native-paper';
+import BottomSheet from 'react-native-raw-bottom-sheet';
 
 import { staticColors } from '@/styles';
 import { TodoForm } from '@/components';
@@ -12,7 +13,7 @@ const Drawer = createDrawerNavigator();
 export interface TodoTabScreenProps {}
 
 export default function TodoTabScreen({}: TodoTabScreenProps) {
-  const [openTodoForm, setOpenTodoForm] = useState<boolean>(false);
+  const todoFormRef = useRef<BottomSheet>(null);
 
   return (
     <>
@@ -23,14 +24,10 @@ export default function TodoTabScreen({}: TodoTabScreenProps) {
         accessibilityStates
         icon={'plus'}
         style={styles.addTodoFAB}
-        onPress={() => setOpenTodoForm(true)}
+        onPress={() => todoFormRef.current?.open()}
         color={staticColors.white}
       />
-      <TodoForm
-        mode={'add'}
-        visible={openTodoForm}
-        onDismiss={() => setOpenTodoForm(false)}
-      />
+      <TodoForm mode={'add'} bottomSheetRef={todoFormRef} />
     </>
   );
 }

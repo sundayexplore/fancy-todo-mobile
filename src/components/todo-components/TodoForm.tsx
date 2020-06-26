@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { StyleSheet, TextInput, View } from 'react-native';
+import React, { useState, useEffect, RefObject } from 'react';
+import { StyleSheet, TextInput } from 'react-native';
 // import AsyncStorage from '@react-native-community/async-storage';
 // import { Dialog, Portal } from 'react-native-paper';
-import BottomSheet from 'reanimated-bottom-sheet';
+import BottomSheet from 'react-native-raw-bottom-sheet';
 // import { widthPercentageToDP as wp } from 'react-native-responsive-screen';
 
 import { ITodo } from '@/types';
@@ -13,11 +13,10 @@ import { ITodo } from '@/types';
 export interface TodoFormProps {
   mode: 'add' | 'update';
   todo?: ITodo;
-  visible: boolean;
-  onDismiss: () => void;
+  bottomSheetRef: RefObject<BottomSheet>;
 }
 
-export default ({ mode, todo, visible, onDismiss }: TodoFormProps) => {
+export default ({ mode, todo, bottomSheetRef }: TodoFormProps) => {
   const [localTodo, setLocalTodo] = useState<ITodo>({
     _id: null,
     name: '',
@@ -35,15 +34,6 @@ export default ({ mode, todo, visible, onDismiss }: TodoFormProps) => {
       // handle here
     }
   }, [mode, todo]);
-
-  const _renderContent = () => {
-    return (
-      <TextInput
-        value={localTodo.name}
-        onChangeText={(text) => _handleTextChange('name', text)}
-      />
-    );
-  };
 
   const _handleTextChange = (
     field: 'name' | 'due' | 'priority',
@@ -74,14 +64,19 @@ export default ({ mode, todo, visible, onDismiss }: TodoFormProps) => {
   };
 
   return (
-    <View style={styles.todoFormWrapper}>
-      <BottomSheet snapPoints={[100]} renderContent={_renderContent} />
-    </View>
+    <BottomSheet ref={bottomSheetRef}>
+      <TextInput
+        autoFocus
+        value={localTodo.name}
+        onChangeText={(text) => _handleTextChange('name', text)}
+      />
+    </BottomSheet>
   );
 };
 
-const styles = StyleSheet.create({
-  todoFormWrapper: {
-    // flex: 1
-  },
-});
+// const styles = StyleSheet.create({
+//   todoFormWrapper: {
+//     // flex: 1,
+//     backgroundColor: 'black',
+//   },
+// });
