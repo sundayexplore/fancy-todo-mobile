@@ -6,7 +6,7 @@ export { default as ProfileTabHeader } from './user-components/ProfileTabHeader'
 // TODO COMPONENTS
 export { default as TodoList } from './todo-components/TodoList';
 export { default as TodoLeftMenu } from './todo-components/TodoLeftMenu';
-export { default as AddTodoModal } from './todo-components/AddTodoModal';
+export { default as TodoForm } from './todo-components/TodoForm';
 export { default as TodoTabHeader } from './todo-components/TodoTabHeader';
 
 // GENERAL COMPONENTS

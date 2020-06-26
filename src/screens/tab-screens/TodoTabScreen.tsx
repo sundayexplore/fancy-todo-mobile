@@ -4,6 +4,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { FAB } from 'react-native-paper';
 
 import { staticColors } from '@/styles';
+import { TodoForm } from '@/components';
 import TodoTodayDrawerScreen from '@/screens/drawer-screens/TodoTodayDrawerScreen';
 
 const Drawer = createDrawerNavigator();
@@ -24,6 +25,11 @@ export default function TodoTabScreen({}: TodoTabScreenProps) {
         style={styles.addTodoFAB}
         onPress={() => setOpenTodoForm(true)}
         color={staticColors.white}
+      />
+      <TodoForm
+        mode={'add'}
+        visible={openTodoForm}
+        onDismiss={() => setOpenTodoForm(false)}
       />
     </>
   );
