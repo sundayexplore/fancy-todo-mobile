@@ -1,5 +1,11 @@
 import React, { useState, useEffect, RefObject } from 'react';
-import { StyleSheet, TextInput } from 'react-native';
+import {
+  StyleSheet,
+  TextInput,
+  View,
+  StyleProp,
+  TextStyle,
+} from 'react-native';
 // import AsyncStorage from '@react-native-community/async-storage';
 // import { Dialog, Portal } from 'react-native-paper';
 import BottomSheet from 'react-native-raw-bottom-sheet';
@@ -26,6 +32,11 @@ export default ({ mode, todo, bottomSheetRef }: TodoFormProps) => {
     completed: false,
   });
   // const [commandInput, setCommandInput] = useState<string>('');
+  const [dynamicTodoTextInputStyle, setDynamicTodoTextInput] = useState<
+    StyleProp<TextStyle>
+  >({
+    height: 35,
+  });
 
   useEffect(() => {
     if (mode === 'update' && todo) {
@@ -64,19 +75,46 @@ export default ({ mode, todo, bottomSheetRef }: TodoFormProps) => {
   };
 
   return (
-    <BottomSheet ref={bottomSheetRef}>
-      <TextInput
-        autoFocus
-        value={localTodo.name}
-        onChangeText={(text) => _handleTextChange('name', text)}
-      />
+    <BottomSheet
+      ref={bottomSheetRef}
+      animationType={'slide'}
+      customStyles={{
+        container: styles.todoFormWrapper,
+      }}
+      keyboardAvoidingViewEnabled>
+      <View style={styles.todoTextInputWrapper}>
+        <TextInput
+          autoFocus
+          value={localTodo.name}
+          onChangeText={(text) => _handleTextChange('name', text)}
+          style={[styles.todoTextInput, dynamicTodoTextInputStyle]}
+          placeholder={'Add Todo'}
+          multiline
+          onContentSizeChange={(event) =>
+            setDynamicTodoTextInput({
+              ...(dynamicTodoTextInputStyle as object),
+              height: event.nativeEvent.contentSize.height,
+            })
+          }
+        />
+      </View>
+      <View style={styles.todoDetailWrapper}></View>
+      <View style={styles.todoActionWrapper}></View>
     </BottomSheet>
   );
 };
 
-// const styles = StyleSheet.create({
-//   todoFormWrapper: {
-//     // flex: 1,
-//     backgroundColor: 'black',
-//   },
-// });
+const styles = StyleSheet.create({
+  todoFormWrapper: {
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 15,
+  },
+  todoTextInputWrapper: {},
+  todoTextInput: {
+    fontSize: 25,
+  },
+  todoDetailWrapper: {},
+  todoActionWrapper: {},
+});
